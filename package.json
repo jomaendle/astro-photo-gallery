@@ -1,7 +1,7 @@
 {
   "name": "astro-photo-gallery",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -14,7 +14,10 @@
     "@astrojs/tailwind": "^5.0.0",
     "astro": "^3.1.0",
     "eslint": "^8.49.0",
-    "prettier": "^3.0.3",
     "tailwindcss": "^3.3.3"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.3",
+    "prettier-plugin-astro": "^0.12.0"
   }
 }
