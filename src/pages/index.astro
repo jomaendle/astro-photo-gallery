@@ -22,10 +22,11 @@ const optimizedImage = await getImage({
 ---
 
 <Layout title="Welcome to Astro." backgroundColor={currentImage.color}>
-  <main class="flex flex-col max-w-2xl gap-8 p-4">
+  <main class="flex flex-col max-w-2xl gap-8 p-4 h-full">
     <h1 class="text-4xl z-10">the beauty of earth</h1>
 
     <Image
+      id="bg-image"
       src={bgImage.src}
       alt="plant"
       class="absolute inset-0 blur-3xl z-0"
@@ -35,9 +36,12 @@ const optimizedImage = await getImage({
       id="high-quality-image"
       src={optimizedImage.src}
       alt="plant"
-      class="z-10 object-contain transition-opacity opacity-0"
+      class="z-10 object-contain transition-opacity opacity-0 flex-1 overflow-hidden"
       {...optimizedImage.attributes}
     />
+    <button id="nextImageButton" class="px-4 py-2 rounded-md border">
+      Next image
+    </button>
   </main>
 </Layout>
 
