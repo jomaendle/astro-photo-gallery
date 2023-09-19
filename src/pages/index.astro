@@ -1,16 +1,46 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
-import plantImage from "../images/plant.jpg";
+import { getImage } from "astro:assets";
+
+import { getCollection } from "astro:content";
+
+const allImages = await getCollection("images");
+
+const currentImage = allImages[0].data;
+
+const bgImage = await getImage({
+  src: currentImage.image,
+  width: 400,
+  quality: "low",
+});
+
+const optimizedImage = await getImage({
+  src: currentImage.image,
+  width: 600,
+});
 ---
 
-<Layout title="Welcome to Astro." backgroundColor="#566B3F">
+<Layout title="Welcome to Astro." backgroundColor={currentImage.color}>
   <main class="flex flex-col max-w-2xl gap-8 p-4">
     <h1 class="text-4xl z-10">the beauty of earth</h1>
 
-    <Image src={plantImage} alt="plant" class="absolute inset-0 blur-3xl z-0" />
-    <Image src={plantImage} alt="plant" class="z-10 max-h-96 object-contain" />
+    <Image
+      src={bgImage.src}
+      alt="plant"
+      class="absolute inset-0 blur-3xl z-0"
+      {...bgImage.attributes}
+    />
+    <Image
+      id="high-quality-image"
+      src={optimizedImage.src}
+      alt="plant"
+      class="z-10 object-contain transition-opacity opacity-0"
+      {...optimizedImage.attributes}
+    />
   </main>
 </Layout>
+
+<script src="../scripts/image-load.ts"></script>
 
 <style></style>
