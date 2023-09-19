@@ -7,7 +7,7 @@ import { getCollection } from "astro:content";
 const allImages = await getCollection("images");
 const currentImage = allImages[0].data;
 
-let isImageLoading = true;
+let isImageLoading = false;
 
 /**
  * DOM Elements
@@ -23,8 +23,6 @@ const image: HTMLImageElement = document.getElementById(
 const bgImage: HTMLImageElement = document.getElementById(
   "bg-image"
 ) as HTMLImageElement;
-
-let hasLoadedHighQualityImage = false;
 
 if (!image) {
   throw new Error("Image not found");
@@ -57,36 +55,9 @@ nextImageButton.addEventListener("click", async () => {
 });
 
 image.addEventListener("load", () => {
+  console.log("Image loaded, ", "add opacity-100");
   image.classList.add("transition-opacity");
   image.classList.add("duration-500");
   image.classList.add("opacity-100");
-
-  isImageLoading = false;
-
-  setTimeout(onImageLoad, 2000);
+  image.classList.remove("opacity-0");
 });
-
-/**
- * Functions
- */
-async function onImageLoad() {
-  const highQualityImage = await getImage({
-    src: currentImage.image,
-    width: 1600,
-    quality: "high",
-  });
-
-  if (!image || hasLoadedHighQualityImage) {
-    return;
-  }
-
-  if (image.src === highQualityImage.src) {
-    return;
-  }
-
-  image.src = highQualityImage.src;
-  image.classList.add("opacity-0");
-  image.classList.remove("opacity-100");
-  hasLoadedHighQualityImage = true;
-  isImageLoading = true;
-}
