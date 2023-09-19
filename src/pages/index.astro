@@ -1,34 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Card from "../components/Card.astro";
+import { Image } from "astro:assets";
+import plantImage from "../images/plant.jpg";
 ---
 
-<Layout title="Welcome to Astro.">
-  <main class="flex flex-col max-w-2xl gap-8">
-    <h1 class="text-4xl">Photography by Joe Maendle</h1>
-    <section>
-      <p class="text-gray-400">
-        Welcome to my photography website. I am a photographer based in Bremen,
-        Germany. I specialize in landscape, nature, and city photography. I also
-        enjoy taking photos of people, places, and things.
-      </p>
-      <p class="text-gray-400">
-        I hope you enjoy my photos. Please feel free to contact me if you have
-        any questions or comments.
-      </p>
-    </section>
+<Layout title="Welcome to Astro." backgroundColor="#566B3F">
+  <main class="flex flex-col max-w-2xl gap-8 p-4">
+    <h1 class="text-4xl z-10">the beauty of earth</h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <a href="/albums">
-        <Card
-          title="Landscape"
-          image="/images/landscape.jpg"
-          link="/landscape"
-        />
-      </a>
-      <Card title="Nature" image="/images/nature.jpg" link="/nature" />
-      <Card title="Wildlife" image="/images/wildlife.jpg" link="/wildlife" />
-    </div>
+    <Image src={plantImage} alt="plant" class="absolute inset-0 blur-3xl z-0" />
+    <Image src={plantImage} alt="plant" class="z-10 max-h-96 object-contain" />
   </main>
 </Layout>
 
