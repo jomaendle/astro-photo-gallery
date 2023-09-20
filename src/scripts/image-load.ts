@@ -1,63 +1,44 @@
-import { getImage } from "astro:assets";
-import { getCollection } from "astro:content";
+import {
+  $currentImageIndex,
+  $loadHighQualityImageByIndex,
+} from "../store/image.store.ts";
+import {
+  addClassesToElement,
+  getElementById,
+  removeClassesFromElement,
+} from "../util/dom.util.ts";
+import { isMobile } from "../util/media-query.util.ts";
 
-/**
- * Variables
- */
-const allImages = await getCollection("images");
-const currentImage = allImages[0].data;
+const NEXT_IMAGE_BUTTON: HTMLButtonElement =
+  getElementById<HTMLButtonElement>("nextImageButton");
 
-let isImageLoading = false;
+export const FOREGROUND_IMAGE: HTMLImageElement =
+  getElementById<HTMLImageElement>("high-quality-image");
 
-/**
- * DOM Elements
- */
-const nextImageButton: HTMLButtonElement = document.getElementById(
-  "nextImageButton"
-) as HTMLButtonElement;
+export const BACKGROUND_IMAGE: HTMLImageElement =
+  getElementById<HTMLImageElement>("bg-image");
 
-const image: HTMLImageElement = document.getElementById(
-  "high-quality-image"
-) as HTMLImageElement;
-
-const bgImage: HTMLImageElement = document.getElementById(
-  "bg-image"
-) as HTMLImageElement;
-
-if (!image) {
+if (!FOREGROUND_IMAGE || !BACKGROUND_IMAGE) {
   throw new Error("Image not found");
 }
 
 /**
  * Event Listeners
  */
-nextImageButton.addEventListener("click", async () => {
-  if (isImageLoading) {
-    console.log("Image is loading");
-    return;
-  }
-
-  const nextImage = allImages[Math.floor(Math.random() * allImages.length)];
-
-  const lqImg = await getImage({
-    src: nextImage.data.image,
-    width: 800,
-    quality: "mid",
-  });
-
-  image.src = lqImg.src;
-  bgImage.src = lqImg.src;
-
-  document.documentElement.style.setProperty(
-    "--backgroundColor",
-    nextImage.data.color
-  );
+NEXT_IMAGE_BUTTON.addEventListener("click", async () => {
+  $currentImageIndex.set($currentImageIndex.get() + 1);
 });
 
-image.addEventListener("load", () => {
-  console.log("Image loaded, ", "add opacity-100");
-  image.classList.add("transition-opacity");
-  image.classList.add("duration-500");
-  image.classList.add("opacity-100");
-  image.classList.remove("opacity-0");
+FOREGROUND_IMAGE.addEventListener("load", () => {
+  addClassesToElement(FOREGROUND_IMAGE, [
+    "transition-opacity",
+    "duration-500",
+    "opacity-0",
+  ]);
+
+  removeClassesFromElement(FOREGROUND_IMAGE, ["opacity-0"]);
+
+  if (!isMobile()) {
+    $loadHighQualityImageByIndex.set($currentImageIndex.get());
+  }
 });

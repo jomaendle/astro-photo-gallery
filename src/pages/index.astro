@@ -6,22 +6,21 @@ import { getImage } from "astro:assets";
 import { getCollection } from "astro:content";
 
 const allImages = await getCollection("images");
-
-const currentImage = allImages[0].data;
+const firstImage = allImages[0].data;
 
 const bgImage = await getImage({
-  src: currentImage.image,
+  src: firstImage.image,
   width: 400,
   quality: "low",
 });
 
 const optimizedImage = await getImage({
-  src: currentImage.image,
+  src: firstImage.image,
   width: 600,
 });
 ---
 
-<Layout title="Welcome to Astro." backgroundColor={currentImage.color}>
+<Layout title="Welcome to Astro." backgroundColor={firstImage.color}>
   <main class="flex flex-col max-w-2xl gap-8 p-4 h-full">
     <h1 class="text-4xl z-10">the beauty of earth</h1>
 
