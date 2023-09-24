@@ -1,46 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { Image } from "astro:assets";
-import { getImage } from "astro:assets";
-
-import { getCollection } from "astro:content";
-
-const allImages = await getCollection("images");
-const firstImage = allImages[0].data;
-
-const bgImage = await getImage({
-  src: firstImage.image,
-  width: 400,
-  quality: "low",
-});
-
-const optimizedImage = await getImage({
-  src: firstImage.image,
-  width: 600,
-});
+import SwiperWrapper from "../components/Swiper";
 ---
 
-<Layout title="Welcome to Astro." backgroundColor={firstImage.color}>
-  <main class="flex flex-col max-w-2xl gap-8 p-4 h-full">
-    <h1 class="text-4xl z-10">the beauty of earth</h1>
-
-    <Image
-      id="bg-image"
-      src={bgImage.src}
-      alt="plant"
-      class="absolute inset-0 blur-3xl z-0"
-      {...bgImage.attributes}
-    />
-    <Image
-      id="high-quality-image"
-      src={optimizedImage.src}
-      alt="plant"
-      class="z-10 object-contain transition-opacity opacity-0 flex-1 overflow-hidden"
-      {...optimizedImage.attributes}
-    />
-    <button id="nextImageButton" class="px-4 py-2 rounded-md border">
-      Next image
-    </button>
+<Layout title="Welcome to Astro.">
+  <main class="flex flex-col gap-8 h-full pt-2">
+    <h1 class="text-4xl z-10 px-4" style="letter-spacing: -1.5px">
+      the beauty of earth
+    </h1>
+    <SwiperWrapper client:load />
   </main>
 </Layout>
 
