@@ -43,12 +43,12 @@ export default function SwiperWrapper() {
   const slides: React.JSX.Element[] = images.map(
     (image: GetImageResult, index: number) => {
       return (
-        <SwiperSlide key={image.src} className={"p-4"}>
+        <SwiperSlide key={image.src} className={"p-4 h-full overflow-hidden"}>
           <img
             id="high-quality-image"
             src={image.src}
             alt="plant"
-            className="z-10 object-contain transition-opacity flex-1 overflow-hidden relative"
+            className="z-10 object-contain transition-opacity h-full flex-1 overflow-hidden relative object-top"
             {...image.attributes}
             loading={index === 0 ? "eager" : "lazy"}
           />
@@ -59,7 +59,7 @@ export default function SwiperWrapper() {
 
   return (
     <Swiper
-      className={"h-full w-full"}
+      className={"w-full h-full"}
       slidesPerView={1}
       spaceBetween={16}
       initialSlide={0}
