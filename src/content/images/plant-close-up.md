@@ -1,4 +1,4 @@
 ---
-color: "#566B3F"
+color: "#577049"
 image: "./plant-close-up.jpg"
 ---

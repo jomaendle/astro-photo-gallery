@@ -20,10 +20,7 @@ function init() {
   const FOREGROUND_IMAGE: HTMLImageElement =
     getElementById<HTMLImageElement>("high-quality-image");
 
-  const BACKGROUND_IMAGE: HTMLImageElement =
-    getElementById<HTMLImageElement>("bg-image");
-
-  if (!FOREGROUND_IMAGE || !BACKGROUND_IMAGE) {
+  if (!FOREGROUND_IMAGE) {
     throw new Error("Image not found");
   }
 

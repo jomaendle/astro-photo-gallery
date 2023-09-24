@@ -1,4 +1,4 @@
 ---
-color: "#245d89"
+color: "#3a678e"
 image: "./mountains.jpg"
 ---

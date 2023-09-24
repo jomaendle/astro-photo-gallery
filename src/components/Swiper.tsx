@@ -1,5 +1,4 @@
 import { Swiper, SwiperSlide, type SwiperClass } from "swiper/react";
-import { EffectFade } from "swiper/modules";
 
 // Import Swiper styles
 import "swiper/css";
@@ -24,6 +23,7 @@ export default function SwiperWrapper() {
           return await getImage({
             src: image.data.image,
             width: preferredImageWidth,
+            quality: 75,
           });
         })
       );
@@ -45,14 +45,6 @@ export default function SwiperWrapper() {
       return (
         <SwiperSlide key={image.src} className={"p-4"}>
           <img
-            id="bg-image"
-            src={image.src}
-            alt="plant"
-            className="absolute inset-0 blur-3xl z-0"
-            {...image.attributes}
-            loading={index === 0 ? "eager" : "lazy"}
-          />
-          <img
             id="high-quality-image"
             src={image.src}
             alt="plant"
@@ -73,6 +65,8 @@ export default function SwiperWrapper() {
       initialSlide={0}
       onSwiper={onSlideChange}
       onSlideChange={onSlideChange}
+      cssMode={true}
+      edgeSwipeDetection={"prevent"}
     >
       {slides}
     </Swiper>
