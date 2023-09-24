@@ -2,6 +2,12 @@ export function getElementById<T extends HTMLElement>(id: string): T {
   return document.getElementById(id) as T;
 }
 
+export function getElementsByClassName<T extends HTMLElement>(
+  className: string
+): T[] {
+  return Array.from(document.getElementsByClassName(className)) as T[];
+}
+
 /**
  * Class operations
  */

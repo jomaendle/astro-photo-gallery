@@ -1,6 +1,7 @@
 import {
   addClassesToElement,
   getElementById,
+  getElementsByClassName,
   removeClassesFromElement,
 } from "../util/dom.util.ts";
 
@@ -13,27 +14,29 @@ window.addEventListener("load", () => {
 
       init();
     }
-  }, 100);
+  }, 50);
 });
 
 function init() {
-  const FOREGROUND_IMAGE: HTMLImageElement =
-    getElementById<HTMLImageElement>("high-quality-image");
+  const FOREGROUND_IMAGES: HTMLImageElement[] =
+    getElementsByClassName<HTMLImageElement>("high-quality-image");
 
-  if (!FOREGROUND_IMAGE) {
+  if (!FOREGROUND_IMAGES.length) {
     throw new Error("Image not found");
   }
 
   /**
    * Event Listeners
    */
-  FOREGROUND_IMAGE.addEventListener("load", () => {
-    addClassesToElement(FOREGROUND_IMAGE, [
-      "transition-opacity",
-      "duration-500",
-      "opacity-0",
-    ]);
+  FOREGROUND_IMAGES.forEach((image: HTMLImageElement) => {
+    image.addEventListener("load", () => {
+      addClassesToElement(image, [
+        "transition-opacity",
+        "duration-500",
+        "opacity-0",
+      ]);
 
-    removeClassesFromElement(FOREGROUND_IMAGE, ["opacity-0"]);
+      removeClassesFromElement(image, ["opacity-0"]);
+    });
   });
 }

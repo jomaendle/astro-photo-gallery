@@ -2,14 +2,19 @@ import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
 import "swiper/css";
+import "swiper/css/pagination";
 
 import type { GetImageResult } from "astro";
 import { getImage } from "astro:assets";
 
 import { type CollectionEntry, getCollection } from "astro:content";
 import React, { type SyntheticEvent, useEffect, useState } from "react";
-import { getImageWidthBasedOnDeviceWidth } from "../util/media-query.util.ts";
-import { $currentImageIndex } from "../store/image.store.ts";
+import {
+  getImageWidthBasedOnDeviceWidth,
+  isMobile,
+} from "../util/media-query.util.ts";
+import { $currentImageIndex, $slideChange } from "../store/image.store.ts";
+import { setImageFadeInStyle } from "../util/image-fade.util.ts";
 
 type ImageWithMeta = GetImageResult & {
   location: string;
@@ -17,6 +22,17 @@ type ImageWithMeta = GetImageResult & {
 
 export default function SwiperWrapper() {
   const [images, setImages] = useState<ImageWithMeta[]>([]);
+  const [swiper, setSwiper] = useState<SwiperClass | null>(null);
+  const [showButtons, setShowButtons] = useState<boolean>(false);
+
+  useEffect(() => {
+    function handleResize() {
+      setShowButtons(!isMobile());
+    }
+    window.addEventListener("resize", handleResize);
+
+    handleResize();
+  }, []);
 
   useEffect(() => {
     const preferredImageWidth = getImageWidthBasedOnDeviceWidth();
@@ -27,7 +43,7 @@ export default function SwiperWrapper() {
           const imageResult = await getImage({
             src: image.data.image,
             width: preferredImageWidth,
-            quality: 75,
+            quality: 82,
           });
 
           return {
@@ -45,28 +61,44 @@ export default function SwiperWrapper() {
 
   function onSlideChange(swiper: SwiperClass) {
     $currentImageIndex.set(swiper.activeIndex);
+
+    $slideChange.set({
+      previousIndex: swiper.previousIndex,
+      activeIndex: swiper.activeIndex,
+    });
   }
 
   function onImageLoaded(event: SyntheticEvent<HTMLImageElement, Event>): void {
-    const image = event.target as HTMLImageElement;
-    image.classList.add("opacity-100");
-    image.classList.remove("opacity-0");
+    setImageFadeInStyle(event.target as HTMLImageElement);
+  }
+
+  function onPrevClick() {
+    swiper?.slidePrev();
+  }
+
+  function onNextClick() {
+    swiper?.slideNext();
   }
 
   const slides: React.JSX.Element[] = images.map(
     (image: ImageWithMeta, index: number) => {
       return (
-        <SwiperSlide key={image.src} className={"p-4 h-full overflow-hidden"}>
+        <SwiperSlide
+          key={image.src}
+          className={"p-4 h-full overflow-hidden "}
+          virtualIndex={index}
+        >
           <div className={"flex flex-col gap-4 h-full"}>
             <img
-              id="high-quality-image"
               src={image.src}
               alt="plant"
-              className="z-10 object-contain transition-opacity opacity-0 h-full flex-1 overflow-hidden relative object-top"
+              className="high-quality-image z-10 object-contain transition-opacity opacity-0 h-full flex-1 overflow-hidden relative object-top"
               {...image.attributes}
               onLoad={onImageLoaded}
               loading={index === 0 ? "eager" : "lazy"}
             />
+            <div className="swiper-lazy-preloader swiper-lazy-preloader-white flex-1"></div>
+            <div className={"swiper-pagination"}></div>
             <div className={"flex flex-col gap-4"}>
               <p className={"text-sm text-gray-200"}>{image.location}</p>
 
@@ -85,18 +117,27 @@ export default function SwiperWrapper() {
   );
 
   return (
-    <Swiper
-      className={"w-full h-full"}
-      slidesPerView={1}
-      spaceBetween={0}
-      initialSlide={0}
-      onSwiper={onSlideChange}
-      onSlideChange={onSlideChange}
-      cssMode={true}
-      edgeSwipeDetection={"prevent"}
-      preventInteractionOnTransition={true}
-    >
-      {slides}
-    </Swiper>
+    <>
+      <Swiper
+        className={"w-full h-full overflow-hidden"}
+        slidesPerView={1}
+        spaceBetween={0}
+        initialSlide={0}
+        onSlideChange={onSlideChange}
+        onSwiper={setSwiper}
+        cssMode={true}
+        edgeSwipeDetection={"prevent"}
+        preventInteractionOnTransition={true}
+      >
+        {slides}
+      </Swiper>
+
+      {showButtons && (
+        <div className={"flex gap-2"}>
+          <button onClick={onPrevClick}>Prev</button>
+          <button onClick={onNextClick}>Next</button>
+        </div>
+      )}
+    </>
   );
 }
