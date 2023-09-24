@@ -1,11 +1,9 @@
 ---
-import { ViewTransitions } from "astro:transitions";
 interface Props {
   title: string;
-  backgroundColor: string;
 }
 
-const { title, backgroundColor } = Astro.props;
+const { title } = Astro.props;
 ---
 
 <!doctype html>
@@ -17,17 +15,16 @@ const { title, backgroundColor } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    <ViewTransitions />
   </head>
   <body>
     <slot />
-    <style is:global define:vars={{ backgroundColor }}>
+    <style is:global>
       html {
         font-family: system-ui, sans-serif;
         background: var(--backgroundColor, #13151a);
         height: 100%;
         color: #fff;
-        transition: background-color 0.3s ease;
+        transition: background 0.3s ease;
       }
 
       body {

@@ -5,6 +5,7 @@ const imageCollection = defineCollection({
     z.object({
       color: z.string(),
       image: image(),
+      location: z.string(),
     }),
 });
 
