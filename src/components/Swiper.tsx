@@ -4,15 +4,14 @@ import { Swiper, type SwiperClass, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 
+import { Icon } from "@iconify/react";
+
 import type { GetImageResult } from "astro";
 import { getImage } from "astro:assets";
 
 import { type CollectionEntry, getCollection } from "astro:content";
 import React, { type SyntheticEvent, useEffect, useState } from "react";
-import {
-  getImageWidthBasedOnDeviceWidth,
-  isMobile,
-} from "../util/media-query.util.ts";
+import { getImageWidthBasedOnDeviceWidth } from "../util/media-query.util.ts";
 import { $currentImageIndex, $slideChange } from "../store/image.store.ts";
 import { setImageFadeInStyle } from "../util/image-fade.util.ts";
 
@@ -23,16 +22,6 @@ type ImageWithMeta = GetImageResult & {
 export default function SwiperWrapper() {
   const [images, setImages] = useState<ImageWithMeta[]>([]);
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
-  const [showButtons, setShowButtons] = useState<boolean>(false);
-
-  useEffect(() => {
-    function handleResize() {
-      setShowButtons(!isMobile());
-    }
-    window.addEventListener("resize", handleResize);
-
-    handleResize();
-  }, []);
 
   useEffect(() => {
     const preferredImageWidth = getImageWidthBasedOnDeviceWidth();
@@ -85,29 +74,29 @@ export default function SwiperWrapper() {
       return (
         <SwiperSlide
           key={image.src}
-          className={"p-4 h-full overflow-hidden "}
+          className={"h-full overflow-hidden p-4"}
           virtualIndex={index}
         >
-          <div className={"flex flex-col gap-4 h-full"}>
+          <div className={"flex h-full flex-col gap-4"}>
             <img
               src={image.src}
               alt="plant"
-              className="high-quality-image z-10 object-contain transition-opacity opacity-0 h-full flex-1 overflow-hidden relative object-top"
+              className="high-quality-image relative z-10 overflow-hidden object-contain object-top opacity-0 transition-opacity"
               {...image.attributes}
               onLoad={onImageLoaded}
               loading={index === 0 ? "eager" : "lazy"}
             />
             <div className="swiper-lazy-preloader swiper-lazy-preloader-white flex-1"></div>
-            <div className={"swiper-pagination"}></div>
-            <div className={"flex flex-col gap-4"}>
-              <p className={"text-sm text-gray-200"}>{image.location}</p>
-
+            <div className={"flex items-center gap-4 md:flex-row"}>
+              <p className={"text-transparent-500 flex-1 text-sm"}>
+                {image.location}
+              </p>
               <button
                 className={
-                  "border-2 border-gray-200 rounded-md px-8 py-2 text-sm w-full"
+                  "self-start rounded-full border-gray-200 py-2 md:py-2"
                 }
               >
-                Download
+                <Icon icon="bi:download" width={20} className={"icon"}></Icon>
               </button>
             </div>
           </div>
@@ -117,11 +106,11 @@ export default function SwiperWrapper() {
   );
 
   return (
-    <>
+    <div className={"h-full flex-col overflow-hidden md:flex"}>
       <Swiper
-        className={"w-full h-full overflow-hidden"}
+        className={"h-full w-full overflow-hidden"}
         slidesPerView={1}
-        spaceBetween={0}
+        spaceBetween={32}
         initialSlide={0}
         onSlideChange={onSlideChange}
         onSwiper={setSwiper}
@@ -132,12 +121,22 @@ export default function SwiperWrapper() {
         {slides}
       </Swiper>
 
-      {showButtons && (
-        <div className={"flex gap-2"}>
-          <button onClick={onPrevClick}>Prev</button>
-          <button onClick={onNextClick}>Next</button>
-        </div>
-      )}
-    </>
+      <div className={"hidden justify-center gap-8 md:flex"}>
+        <button onClick={onPrevClick}>
+          <Icon
+            icon={"carbon:previous-outline"}
+            width={42}
+            className={"icon"}
+          ></Icon>
+        </button>
+        <button onClick={onNextClick}>
+          <Icon
+            icon={"carbon:next-outline"}
+            width={42}
+            className={"icon"}
+          ></Icon>
+        </button>
+      </div>
+    </div>
   );
 }

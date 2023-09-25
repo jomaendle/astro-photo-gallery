@@ -31,6 +31,14 @@ const { title } = Astro.props;
         height: 100%;
         overflow: hidden;
       }
+
+      .icon {
+        @apply text-gray-100 transition-colors duration-150 hover:text-gray-300;
+      }
+
+      .text-transparent-500 {
+        color: rgba(255, 255, 255, 0.67);
+      }
     </style>
     <script src="../store/image.effects.ts"></script>
   </body>

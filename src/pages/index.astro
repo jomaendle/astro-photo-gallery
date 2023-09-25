@@ -5,35 +5,46 @@ import SwiperWrapper from "../components/Swiper";
 
 <Layout title="Welcome to Astro.">
   <div class="bg-gradient absolute inset-0 -z-[1]"></div>
-  <div class="bg-image h-full w-full fixed -z-[1]"></div>
+  <div class="bg-image fixed -z-[1] h-full w-full blur-[90px] md:blur-[150px]">
+  </div>
   <main
-    class="flex flex-col md:grid md:grid-cols-2 gap-2 h-full pt-4 bg-transparent"
+    class="flex h-full flex-col gap-2 bg-transparent pt-4 md:grid md:gap-12 md:p-8 lg:grid-cols-3"
   >
-    <h1
-      class="text-4xl z-10 px-4 font-bold text-center"
-      style="letter-spacing: -1.2px"
-    >
-      the beauty of earth
-    </h1>
-    <SwiperWrapper client:load />
+    <div class="col-span-2 flex flex-col gap-8 lg:col-span-1">
+      <h1
+        class="z-10 px-4 text-center text-4xl font-bold md:p-0 md:text-left md:text-6xl"
+        style="letter-spacing: -1.2px"
+      >
+        the beauty of earth
+      </h1>
+      <p class="description text-transparent-500 hidden md:block">
+        images from around the world. <br />
+         explore the beauty of our planet.
+      </p>
+    </div>
+
+    <div class="col-span-2 h-full overflow-hidden lg:col-start-2">
+      <SwiperWrapper client:load />
+    </div>
   </main>
 </Layout>
 
 <script src="../scripts/image-load.ts"></script>
 
 <style>
+  p.description {
+    line-height: 18px;
+  }
+
   div.bg-gradient {
     background: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
   }
 
   div.bg-image {
-    background-image: var(--backgroundImage);
-    background-color: var(--backgroundColor);
     background-size: cover;
     background-position: center;
     top: 0;
     left: 0;
-    filter: blur(90px);
     opacity: 0;
     animation: fade 0.3s ease-in-out forwards;
     transition: background 0.3s ease;
