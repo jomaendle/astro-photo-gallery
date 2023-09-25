@@ -21,15 +21,15 @@ const { title } = Astro.props;
     <style is:global>
       html {
         font-family: system-ui, sans-serif;
-        background: var(--backgroundColor, #13151a);
         height: 100%;
         color: #fff;
-        transition: background 0.3s ease;
       }
 
       body {
         height: 100%;
         overflow: hidden;
+        background-color: var(--backgroundColor, #13151a);
+        transition: background-color 0.3s ease;
       }
 
       .icon {
