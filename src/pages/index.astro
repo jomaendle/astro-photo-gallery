@@ -5,8 +5,6 @@ import SwiperWrapper from "../components/Swiper";
 
 <Layout title="Welcome to Astro.">
   <div class="bg-gradient absolute inset-0 -z-[1]"></div>
-  <div class="bg-image fixed -z-[1] h-full w-full blur-[90px] md:blur-[150px]">
-  </div>
   <main
     class="flex h-full flex-col gap-2 bg-transparent pt-4 md:grid md:gap-12 md:p-8 lg:grid-cols-3"
   >
@@ -38,25 +36,6 @@ import SwiperWrapper from "../components/Swiper";
 
   div.bg-gradient {
     background: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
-  }
-
-  div.bg-image {
-    background-size: cover;
-    background-position: center;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    animation: fade 0.3s ease-in-out forwards;
-    transition: background 0.3s ease;
-  }
-
-  @keyframes fade {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
   }
 </style>
  ```
