@@ -77,7 +77,7 @@ export default function SwiperWrapper() {
           className={"h-full overflow-hidden p-4"}
           virtualIndex={index}
         >
-          <div className={"flex h-full flex-col gap-4"}>
+          <div className={"flex h-full flex-col gap-2"}>
             <img
               src={image.src}
               alt="plant"
