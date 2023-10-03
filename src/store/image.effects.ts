@@ -1,10 +1,11 @@
 import { $currentImageIndex, $slideChange } from "./image.store.ts";
 import { type CollectionEntry, getCollection } from "astro:content";
-import { getElementsByClassName } from "../util/dom.util.ts";
 import {
   setImageFadeInStyle,
   setImageFadeOutStyle,
 } from "../util/image-fade.util.ts";
+import { getAllImageElements, getCurrentImageElement } from "../util/images.ts";
+import { setMaxWidthForImageWrapper } from "../util/image-dimension.util.ts";
 
 const allImages = await getCollection("images");
 
@@ -19,6 +20,8 @@ $currentImageIndex.subscribe(async (index) => {
     "--backgroundColor",
     image.data.color
   );
+
+  setMaxWidthForImageWrapper(getCurrentImageElement(index));
 });
 
 /**
@@ -30,15 +33,14 @@ $slideChange.listen(({ activeIndex, previousIndex }) => {
     return;
   }
 
-  const images = getElementsByClassName("high-quality-image");
-  const currentImage: HTMLImageElement | undefined = images[
-    activeIndex
-  ] as HTMLImageElement;
+  const currentImage = getCurrentImageElement(activeIndex);
 
   if (currentImage?.complete) {
     setImageFadeInStyle(currentImage);
   }
 
+  const images = getAllImageElements();
   const previousImage = images[previousIndex] as HTMLImageElement;
+
   setImageFadeOutStyle(previousImage);
 });

@@ -14,6 +14,7 @@ import React, { type SyntheticEvent, useEffect, useState } from "react";
 import { getImageWidthBasedOnDeviceWidth } from "../util/media-query.util.ts";
 import { $currentImageIndex, $slideChange } from "../store/image.store.ts";
 import { setImageFadeInStyle } from "../util/image-fade.util.ts";
+import { Virtual } from "swiper/modules";
 
 type ImageWithMeta = GetImageResult & {
   location: string;
@@ -74,10 +75,13 @@ export default function SwiperWrapper() {
       return (
         <SwiperSlide
           key={image.src}
-          className={"h-full overflow-hidden p-4"}
+          className={"flex h-full justify-center overflow-hidden p-4"}
           virtualIndex={index}
         >
-          <div className={"flex h-full flex-col gap-2"}>
+          <div
+            className={"flex h-full flex-col gap-2"}
+            style={{ maxWidth: "var(--imageWrapperMaxWidth)" }}
+          >
             <img
               src={image.src}
               alt="plant"
@@ -117,6 +121,8 @@ export default function SwiperWrapper() {
         cssMode={true}
         edgeSwipeDetection={"prevent"}
         preventInteractionOnTransition={true}
+        virtual={false}
+        modules={[Virtual]}
       >
         {slides}
       </Swiper>
