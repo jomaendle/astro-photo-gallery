@@ -19,7 +19,11 @@ export function setMaxWidthForImageWrapper(img: HTMLImageElement | undefined) {
     return;
   }
 
+  /**
+   * Todo: fix that the width is too small after a landscape image was shown.
+   */
   const [width, height] = getContainedSize(img);
+
   document.documentElement.style.setProperty(
     "--imageWrapperMaxWidth",
     `${Math.floor(width)}px`
