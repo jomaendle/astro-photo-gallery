@@ -23,6 +23,8 @@ type ImageWithMeta = GetImageResult & {
 export default function SwiperWrapper() {
   const [images, setImages] = useState<ImageWithMeta[]>([]);
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
+  const [hasNextImage, setHasNextImage] = useState<boolean>(false);
+  const [hasPrevImage, setHasPrevImage] = useState<boolean>(false);
 
   useEffect(() => {
     const preferredImageWidth = getImageWidthBasedOnDeviceWidth();
@@ -70,6 +72,24 @@ export default function SwiperWrapper() {
     swiper?.slideNext();
   }
 
+  async function downloadImage() {
+    const image = images[swiper?.activeIndex ?? 0];
+
+    const imageResult = await getImage({
+      src: image.src,
+      width: image.attributes.width * 2,
+      height: image.attributes.height * 2,
+      quality: 100,
+    });
+
+    const link = document.createElement("a");
+    link.href = imageResult.src;
+    link.download = `${image.location}.jpg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   const slides: React.JSX.Element[] = images.map(
     (image: ImageWithMeta, index: number) => {
       return (
@@ -92,15 +112,19 @@ export default function SwiperWrapper() {
             />
             <div className="swiper-lazy-preloader swiper-lazy-preloader-white flex-1"></div>
             <div className={"flex items-center gap-4 md:flex-row"}>
-              <p className={"text-transparent-500 flex-1 text-sm"}>
-                {image.location}
-              </p>
+              <p className={"text-transparent-500 text-sm"}>{image.location}</p>
               <button
+                title={"Download this image"}
                 className={
-                  "self-start rounded-full border-gray-200 py-2 md:py-2"
+                  "flex aspect-square h-10 w-10 items-center justify-center self-start rounded-full border-gray-200 py-2 transition-colors hover:bg-[rgba(255,255,255,0.1)] md:py-2"
                 }
               >
-                <Icon icon="bi:download" width={20} className={"icon"}></Icon>
+                <Icon
+                  icon="bi:download"
+                  width={20}
+                  className={"icon"}
+                  onClick={downloadImage}
+                ></Icon>
               </button>
             </div>
           </div>

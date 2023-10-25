@@ -5,7 +5,6 @@ import {
   setImageFadeOutStyle,
 } from "../util/image-fade.util.ts";
 import { getAllImageElements, getCurrentImageElement } from "../util/images.ts";
-import { setMaxWidthForImageWrapper } from "../util/image-dimension.util.ts";
 
 const allImages = await getCollection("images");
 
@@ -20,8 +19,6 @@ $currentImageIndex.subscribe(async (index) => {
     "--backgroundColor",
     image.data.color
   );
-
-  setMaxWidthForImageWrapper(getCurrentImageElement(index));
 });
 
 /**

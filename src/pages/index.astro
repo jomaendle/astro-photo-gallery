@@ -1,14 +1,19 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import SwiperWrapper from "../components/Swiper";
+
+const meta = {
+  title: "The Beauty of Earth",
+  description: "Photography from around the world.",
+};
 ---
 
-<Layout title="Welcome to Astro.">
+<Layout title={meta.title} description={meta.description}>
   <div class="bg-gradient absolute inset-0 -z-[1]"></div>
   <main
     class="flex h-full flex-col gap-2 bg-transparent pt-4 md:grid md:gap-12 md:p-8 lg:grid-cols-3"
   >
-    <div class="col-span-2 flex flex-col gap-8 lg:col-span-1">
+    <div class="col-span-2 flex flex-col gap-4 lg:col-span-1 lg:gap-8">
       <h1
         class="z-10 px-4 text-center text-4xl font-bold md:p-0 md:text-left md:text-6xl"
         style="letter-spacing: -1.2px"
@@ -21,9 +26,26 @@ import SwiperWrapper from "../components/Swiper";
       </p>
     </div>
 
-    <div class="col-span-2 h-full overflow-hidden lg:col-start-2">
+    <div class="col-span-2 h-full overflow-hidden pb-8 md:pb-2 lg:col-start-2">
       <SwiperWrapper client:load />
     </div>
+
+    <footer class="fixed bottom-0 w-full">
+      <div
+        class="text-transparent-500 flex flex-col items-center justify-center py-4 text-xs md:items-start"
+      >
+        <div class="flex items-center space-x-1">
+          <span>© 2023</span>
+          <a
+            href="https://www.jomaendle.com"
+            target="_blank"
+            rel="preload"
+            class="cursor-pointer underline underline-offset-1"
+            >Johannes Maendle</a
+          >
+        </div>
+      </div>
+    </footer>
   </main>
 </Layout>
 

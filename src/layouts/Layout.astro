@@ -1,19 +1,33 @@
 ---
 interface Props {
   title: string;
+  description: string;
 }
 
-const { title } = Astro.props;
+const { title, description } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Astro description" />
+    <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+
     <title>{title}</title>
   </head>
   <body>
@@ -28,8 +42,8 @@ const { title } = Astro.props;
       body {
         height: 100%;
         overflow: hidden;
-        background-color: var(--backgroundColor, #13151a);
-        transition: background-color 0.3s ease;
+        background: var(--backgroundColor, #13151a);
+        transition: background 500ms ease-out;
       }
 
       .icon {
@@ -37,7 +51,7 @@ const { title } = Astro.props;
       }
 
       .text-transparent-500 {
-        color: rgba(255, 255, 255, 0.75);
+        color: rgba(255, 255, 255, 0.83);
       }
     </style>
     <script src="../store/image.effects.ts"></script>
