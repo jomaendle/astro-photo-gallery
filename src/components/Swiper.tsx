@@ -23,8 +23,18 @@ type ImageWithMeta = GetImageResult & {
 export default function SwiperWrapper() {
   const [images, setImages] = useState<ImageWithMeta[]>([]);
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
-  const [hasNextImage, setHasNextImage] = useState<boolean>(false);
-  const [hasPrevImage, setHasPrevImage] = useState<boolean>(false);
+
+  useEffect(() => {
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight") {
+        swiper?.slideNext();
+      }
+
+      if (event.key === "ArrowLeft") {
+        swiper?.slidePrev();
+      }
+    });
+  }, [swiper]);
 
   useEffect(() => {
     const preferredImageWidth = getImageWidthBasedOnDeviceWidth();
