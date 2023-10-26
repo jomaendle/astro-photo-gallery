@@ -27,11 +27,11 @@ export default function SwiperWrapper() {
   useEffect(() => {
     window.addEventListener("keydown", (event) => {
       if (event.key === "ArrowRight") {
-        swiper?.slideNext();
+        onNextClick();
       }
 
       if (event.key === "ArrowLeft") {
-        swiper?.slidePrev();
+        onPrevClick();
       }
     });
   }, [swiper]);
@@ -75,10 +75,30 @@ export default function SwiperWrapper() {
   }
 
   function onPrevClick() {
+    const prevIcon = document.getElementById("prev-btn");
+    const icon = prevIcon?.children.item(0);
+    const textClass = "text-[rgba(255,255,255,0.1)]";
+    icon?.classList.add(textClass);
+
+    setTimeout(() => {
+      icon?.classList.remove(textClass);
+    }, 340);
+
+    prevIcon?.focus();
     swiper?.slidePrev();
   }
 
   function onNextClick() {
+    const nextIcon = document.getElementById("next-btn");
+    const icon = nextIcon?.children.item(0);
+    const textClass = "text-[rgba(255,255,255,0.1)]";
+    icon?.classList.add(textClass);
+
+    setTimeout(() => {
+      icon?.classList.remove(textClass);
+    }, 400);
+
+    nextIcon?.focus();
     swiper?.slideNext();
   }
 
@@ -105,17 +125,17 @@ export default function SwiperWrapper() {
       return (
         <SwiperSlide
           key={image.src}
-          className={"flex h-full justify-center overflow-hidden p-4"}
+          className={"flex h-full justify-center overflow-hidden"}
           virtualIndex={index}
         >
           <div
-            className={"flex h-full flex-col gap-2"}
+            className={"flex h-full flex-col gap-2 "}
             style={{ maxWidth: "var(--imageWrapperMaxWidth)" }}
           >
             <img
               src={image.src}
               alt="plant"
-              className="high-quality-image relative z-10 overflow-hidden object-contain object-top opacity-0 transition-opacity"
+              className="high-quality-image relative z-10 overflow-hidden object-contain object-left-top opacity-0 transition-opacity"
               {...image.attributes}
               onLoad={onImageLoaded}
               loading={index === 0 ? "eager" : "lazy"}
@@ -161,15 +181,29 @@ export default function SwiperWrapper() {
         {slides}
       </Swiper>
 
-      <div className={"hidden justify-center gap-8 md:flex"}>
-        <button onClick={onPrevClick}>
+      <div
+        className={
+          "hidden justify-center gap-8 pb-2 md:mt-4 md:flex md:justify-start "
+        }
+      >
+        <button
+          id={"prev-btn"}
+          onClick={onPrevClick}
+          title={"Show previous image (or press left arrow key)"}
+          aria-label={"Show previous image"}
+        >
           <Icon
             icon={"carbon:previous-outline"}
             width={42}
             className={"icon"}
           ></Icon>
         </button>
-        <button onClick={onNextClick}>
+        <button
+          id={"next-btn"}
+          onClick={onNextClick}
+          title={"Show next image (or press right arrow key)"}
+          aria-label={"Show next image"}
+        >
           <Icon
             icon={"carbon:next-outline"}
             width={42}
