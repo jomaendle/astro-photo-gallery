@@ -135,7 +135,7 @@ export default function SwiperWrapper() {
             <img
               src={image.src}
               alt="plant"
-              className="high-quality-image relative z-10 overflow-hidden object-contain object-left-top opacity-0 transition-opacity"
+              className="high-quality-image relative z-10 overflow-hidden object-contain object-center opacity-0 transition-opacity md:object-left-top"
               {...image.attributes}
               onLoad={onImageLoaded}
               loading={index === 0 ? "eager" : "lazy"}
