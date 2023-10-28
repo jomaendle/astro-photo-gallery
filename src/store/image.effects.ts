@@ -1,10 +1,16 @@
-import { $currentImageIndex, $slideChange } from "./image.store.ts";
+import {
+  $currentImageIndex,
+  $loadedImagesSrcs,
+  $slideChange,
+} from "./image.store.ts";
 import { type CollectionEntry, getCollection } from "astro:content";
 import {
   setImageFadeInStyle,
   setImageFadeOutStyle,
 } from "../util/image-fade.util.ts";
 import { getAllImageElements, getCurrentImageElement } from "../util/images.ts";
+import { getImage } from "astro:assets";
+import { getImageWidthBasedOnDeviceWidth } from "../util/media-query.util.ts";
 
 const allImages = await getCollection("images");
 
@@ -19,6 +25,8 @@ $currentImageIndex.subscribe(async (index) => {
     "--backgroundColor",
     image.data.color
   );
+
+  await _preloadImgs(index, image);
 });
 
 /**
@@ -41,3 +49,38 @@ $slideChange.listen(({ activeIndex, previousIndex }) => {
 
   setImageFadeOutStyle(previousImage);
 });
+
+async function _preloadImgs(index: number, image: CollectionEntry<"images">) {
+  console.log(allImages);
+
+  // prefetch the next 2 images in the background
+  const nextImage = allImages[index + 1];
+  if (nextImage) {
+    const preferredImageWidth = getImageWidthBasedOnDeviceWidth();
+
+    const nextImageElement = await getImage({
+      src: image.data.image,
+      width: preferredImageWidth,
+      quality: 90,
+    });
+
+    if ($loadedImagesSrcs.get().includes(nextImage.data.image.src)) {
+      console.log("Image already loaded");
+      return;
+    }
+
+    const nextImg = new Image();
+    nextImg.src = nextImageElement.src;
+    nextImg.classList.add("opacity-0");
+
+    document.body.appendChild(nextImg);
+
+    nextImg.addEventListener("load", () => {
+      console.log("nextImage", nextImage.data.image.src);
+      $loadedImagesSrcs.set([
+        ...$loadedImagesSrcs.get(),
+        nextImage.data.image.src,
+      ]);
+    });
+  }
+}

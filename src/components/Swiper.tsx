@@ -45,7 +45,7 @@ export default function SwiperWrapper() {
           const imageResult = await getImage({
             src: image.data.image,
             width: preferredImageWidth,
-            quality: 82,
+            quality: 90,
           });
 
           return {
