@@ -77,7 +77,7 @@ export default function SwiperWrapper() {
   function onPrevClick() {
     const prevIcon = document.getElementById("prev-btn");
     const icon = prevIcon?.children.item(0);
-    const textClass = "text-[rgba(255,255,255,0.1)]";
+    const textClass = "text-gray-500";
     icon?.classList.add(textClass);
 
     setTimeout(() => {
@@ -183,7 +183,7 @@ export default function SwiperWrapper() {
 
       <div
         className={
-          "hidden justify-center gap-8 pb-2 md:mt-4 md:flex md:justify-start "
+          "hidden justify-center gap-8 pb-2 md:mt-4 md:flex md:justify-start"
         }
       >
         <button

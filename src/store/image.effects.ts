@@ -26,7 +26,7 @@ $currentImageIndex.subscribe(async (index) => {
     image.data.color
   );
 
-  await _preloadImgs(index, image);
+  /*await _preloadImgs(index, image);*/
 });
 
 /**
@@ -34,6 +34,8 @@ $currentImageIndex.subscribe(async (index) => {
  * It fades in the current image and fades out the previous image.
  */
 $slideChange.listen(({ activeIndex, previousIndex }) => {
+  console.log("slideChange", activeIndex, previousIndex);
+
   if (activeIndex === previousIndex) {
     return;
   }

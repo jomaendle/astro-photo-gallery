@@ -47,11 +47,22 @@ const { title, description } = Astro.props;
       }
 
       .icon {
-        @apply text-gray-100 transition-colors duration-150 hover:text-gray-300;
+        @apply text-gray-100 transition-colors duration-150 hover:text-gray-400;
       }
 
       .text-transparent-500 {
         color: rgba(255, 255, 255, 0.83);
+      }
+
+      button[disabled] {
+        cursor: not-allowed;
+        opacity: 0.5;
+        transition: none;
+
+        &:hover {
+          color: inherit;
+          opacity: 0.5;
+        }
       }
     </style>
     <script src="../store/image.effects.ts"></script>
