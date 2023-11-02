@@ -2,12 +2,13 @@ import React, { type SyntheticEvent } from "react";
 import { Icon } from "@iconify/react";
 import { type GetImageResult } from "astro";
 import { setImageFadeInStyle } from "../util/image-fade.util.ts";
-import { getImage } from "astro:assets";
 import { IMAGE_ID } from "../util/constants.ts";
 import { createDownloadElement } from "../util/dom.util.ts";
+import { getCollection } from "astro:content";
 
 export type ImageWithMeta = GetImageResult & {
   location: string;
+  id: string;
 };
 
 export default function ImageSlides({
@@ -22,14 +23,14 @@ export default function ImageSlides({
   }
 
   async function downloadImage() {
-    const imageResult = await getImage({
-      src: image.src,
-      width: image.attributes.width * 2,
-      height: image.attributes.height * 2,
-      quality: 100,
-    });
+    const allImages = await getCollection("images");
+    const newImage = allImages.find((img) => img.data.id === image.id);
 
-    createDownloadElement(imageResult.src, image.location);
+    if (!newImage) {
+      return console.error("Image not found");
+    }
+
+    createDownloadElement(newImage.data.image.src, image.location);
   }
 
   return (

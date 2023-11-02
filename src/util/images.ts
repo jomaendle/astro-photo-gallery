@@ -31,6 +31,7 @@ export async function loadImages(
       return {
         ...imageResult,
         location: image.data.location,
+        id: image.data.id,
       };
     })
   );
