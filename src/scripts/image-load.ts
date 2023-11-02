@@ -4,6 +4,7 @@ import {
   getElementsByClassName,
   removeClassesFromElement,
 } from "../util/dom.util.ts";
+import { IMAGE_ID } from "../util/constants.ts";
 
 window.addEventListener("load", () => {
   // check for the dom elements until they are loaded
@@ -19,7 +20,7 @@ window.addEventListener("load", () => {
 
 function init() {
   const FOREGROUND_IMAGES: HTMLImageElement[] =
-    getElementsByClassName<HTMLImageElement>("high-quality-image");
+    getElementsByClassName<HTMLImageElement>(IMAGE_ID);
 
   if (!FOREGROUND_IMAGES.length) {
     throw new Error("Image not found");

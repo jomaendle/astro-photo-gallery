@@ -1,5 +1,6 @@
 import React from "react";
 import { Icon } from "@iconify/react";
+import { NEXT_BUTTON_ID, PREV_BUTTON_ID } from "../util/constants.ts";
 
 export interface ImageButtonsProps {
   onPrevClick: () => void;
@@ -17,7 +18,7 @@ export default function ImageButtons({
       }
     >
       <button
-        id={"prev-btn"}
+        id={PREV_BUTTON_ID}
         onClick={onPrevClick}
         title={"Show previous image (or press left arrow key)"}
         aria-label={"Show previous image"}
@@ -29,7 +30,7 @@ export default function ImageButtons({
         ></Icon>
       </button>
       <button
-        id={"next-btn"}
+        id={NEXT_BUTTON_ID}
         onClick={onNextClick}
         title={"Show next image (or press right arrow key)"}
         aria-label={"Show next image"}
