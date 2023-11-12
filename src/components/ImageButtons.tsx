@@ -26,7 +26,7 @@ export default function ImageButtons({
         <Icon
           icon={"carbon:previous-outline"}
           width={42}
-          className={"icon"}
+          className={"icon icon-hover"}
         ></Icon>
       </button>
       <button
@@ -35,7 +35,11 @@ export default function ImageButtons({
         title={"Show next image (or press right arrow key)"}
         aria-label={"Show next image"}
       >
-        <Icon icon={"carbon:next-outline"} width={42} className={"icon"}></Icon>
+        <Icon
+          icon={"carbon:next-outline"}
+          width={42}
+          className={"icon icon-hover"}
+        ></Icon>
       </button>
     </div>
   );
