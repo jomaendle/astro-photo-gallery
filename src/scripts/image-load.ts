@@ -11,11 +11,11 @@ window.addEventListener("load", () => {
   let interval = setInterval(() => {
     if (document.readyState === "complete") {
       clearInterval(interval);
-      console.log("DOM loaded. Image load script loaded.");
+      console.info("DOM loaded. Image load script loaded.");
 
       init();
     }
-  }, 50);
+  }, 100);
 });
 
 function init() {

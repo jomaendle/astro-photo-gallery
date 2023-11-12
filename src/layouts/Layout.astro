@@ -1,4 +1,5 @@
 ---
+import Toast from "../components/Toast.astro";
 interface Props {
   title: string;
   description: string;
@@ -32,6 +33,9 @@ const { title, description } = Astro.props;
   </head>
   <body>
     <slot />
+
+    <Toast />
+
     <style is:global>
       html {
         font-family: system-ui, sans-serif;
@@ -47,7 +51,7 @@ const { title, description } = Astro.props;
       }
 
       .icon {
-        @apply text-gray-100 transition-colors duration-150 hover:text-gray-400;
+        @apply text-gray-200 transition-colors duration-150 hover:text-gray-400;
       }
 
       .text-transparent-500 {

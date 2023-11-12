@@ -9,6 +9,8 @@ import { $currentImageIndex, $slideChange } from "../store/image.store.ts";
 import ImageButtons from "./ImageButtons.tsx";
 import ImageSlides, { type ImageWithMeta } from "./ImageSlides.tsx";
 import { loadImages, onImageChange } from "../util/images.ts";
+import { navigateToImage } from "../util/url.util.ts";
+import { Pagination } from "swiper/modules";
 
 export default function SwiperWrapper() {
   const [images, setImages] = useState<ImageWithMeta[]>([]);
@@ -33,6 +35,12 @@ export default function SwiperWrapper() {
       setImages(images);
     });
   }, []);
+
+  useEffect(() => {
+    if (swiper && images) {
+      navigateToImage(swiper, images);
+    }
+  }, [images, swiper]);
 
   function onSlideChange(swiper: SwiperClass) {
     $currentImageIndex.set(swiper.activeIndex);
@@ -67,6 +75,7 @@ export default function SwiperWrapper() {
         onSlideChange={onSlideChange}
         onSwiper={setSwiper}
         cssMode={true}
+        modules={[Pagination]}
         edgeSwipeDetection={"prevent"}
       >
         {slides}

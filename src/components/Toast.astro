@@ -1,0 +1,14 @@
+---
+import { TOAST_CONTENT, TOAST_WRAPPER_ID } from "../util/toast";
+---
+
+<div
+  id={TOAST_WRAPPER_ID}
+  class="invisible absolute inset-0 flex items-start justify-center"
+>
+  <div
+    id={TOAST_CONTENT}
+    class="z-20 flex items-center gap-2 rounded-md bg-gray-100 py-1.5 pl-2 pr-3 text-sm text-gray-700 shadow-md transition duration-300 ease-out"
+  >
+  </div>
+</div>
