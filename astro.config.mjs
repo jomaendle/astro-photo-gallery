@@ -8,5 +8,5 @@ import react from "@astrojs/react";
 export default defineConfig({
   output: "server",
   adapter: netlify(),
-  integrations: [tailwind(), react()]
+  integrations: [tailwind(), react()],
 });
