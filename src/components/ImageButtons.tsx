@@ -14,7 +14,7 @@ export default function ImageButtons({
   return (
     <div
       className={
-        "hidden justify-center gap-8 pb-2 md:mt-4 md:flex md:justify-start"
+        "z-20 hidden justify-center gap-8 pb-2 md:mt-4 md:flex md:justify-start"
       }
     >
       <button

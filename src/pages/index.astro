@@ -10,20 +10,18 @@ const meta = {
 
 <Layout title={meta.title} description={meta.description}>
   <div
-    style="animation: 2.5s 1s ease-in bg-animation forwards;"
+    style="animation: 2s ease-in bg-animation forwards;"
     class="bg-animation
-    pointer-events-none
-    absolute
-    inset-0
-    z-20"
+   bg-[rgba(0,
+    0,
+    0,
+    0.8)]
+    pointer-events-none absolute inset-0
+    z-20
+    backdrop-blur-[40px]"
   >
   </div>
-  <div
-    transition-style="out:circle:bottom-left"
-    class="absolute inset-0 z-20 bg-[var(--backgroundColor)]"
-  >
-  </div>
-  <div class="bg-gradient absolute inset-0 -z-[2]"></div>
+
   <main
     class="flex h-full flex-col gap-8 bg-transparent px-4 pt-4 md:grid md:gap-12 md:px-8 md:pt-8 lg:grid-cols-3"
   >
@@ -44,7 +42,7 @@ const meta = {
       <SwiperWrapper client:load />
     </div>
 
-    <footer class="fixed bottom-0 -z-[1] w-full">
+    <footer class="fixed bottom-0 z-0 w-full">
       <div
         class="text-transparent-500 flex flex-col items-center justify-center py-4 text-xs lg:items-start"
       >
@@ -54,7 +52,7 @@ const meta = {
             href="https://www.jomaendle.com"
             target="_blank"
             rel="preload"
-            class="cursor-pointer underline underline-offset-1"
+            class="z-20 cursor-pointer underline underline-offset-1"
             >Johannes Maendle</a
           >
         </div>
@@ -70,43 +68,18 @@ const meta = {
     line-height: 18px;
   }
 
-  div.bg-gradient {
-    background: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
-  }
-
-  @keyframes circle-out-bottom-left {
-    from {
-      clip-path: circle(125%);
-    }
-    to {
-      clip-path: circle(0% at bottom left);
-    }
-  }
-
-  [transition-style="out:circle:bottom-left"] {
-    animation: 2.5s 1s cubic-bezier(0.25, 1, 0.3, 1) circle-out-hesitate both;
-  }
-
-  @keyframes circle-out-hesitate {
-    0% {
-      clip-path: circle(125%);
-    }
-    40% {
-      clip-path: circle(40%);
-    }
-    100% {
-      clip-path: circle(0%);
-    }
-  }
-
   @keyframes bg-animation {
     from {
       background-color: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(40px);
+    }
+    99% {
+      z-index: 20;
     }
     to {
       background-color: transparent;
       backdrop-filter: blur(0px);
+      z-index: -1;
     }
   }
 </style>
