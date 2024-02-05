@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import SwiperWrapper from "../components/Swiper";
+import Footer from "../components/Footer.astro";
 
 const meta = {
   title: "The Beauty of Earth",
@@ -17,22 +18,24 @@ const meta = {
     0,
     0.8)]
     pointer-events-none absolute inset-0
-    z-20
+    z-30
     backdrop-blur-[40px]"
   >
   </div>
 
   <main
-    class="flex h-full flex-col gap-8 bg-transparent px-4 pt-4 md:grid md:gap-12 md:px-8 md:pt-8 lg:grid-cols-3"
+    class="flex h-full flex-col gap-8 bg-transparent px-4 pt-4 md:gap-12 md:px-8 md:pt-8 lg:grid-cols-3"
   >
     <div class="col-span-2 flex flex-col gap-4 lg:col-span-1 lg:gap-8">
       <h1
-        class="z-10 px-4 text-center text-4xl font-bold md:p-0 md:text-left md:text-6xl"
+        class="z-10 px-4 text-center text-4xl font-bold md:p-0 md:text-6xl lg:text-left"
         style="letter-spacing: -1.2px"
       >
         the beauty of earth
       </h1>
-      <p class="description text-transparent-500 hidden md:block">
+      <p
+        class="description text-transparent-500 hidden text-center md:block lg:text-left"
+      >
         images from around the world. <br />
          explore the beauty of our planet.
       </p>
@@ -42,22 +45,7 @@ const meta = {
       <SwiperWrapper client:load />
     </div>
 
-    <footer class="fixed bottom-0 z-0 w-full">
-      <div
-        class="text-transparent-500 flex flex-col items-center justify-center py-4 text-xs lg:items-start"
-      >
-        <div class="flex items-center space-x-1">
-          <span>© 2023</span>
-          <a
-            href="https://www.jomaendle.com"
-            target="_blank"
-            rel="preload"
-            class="z-20 cursor-pointer underline underline-offset-1"
-            >Johannes Maendle</a
-          >
-        </div>
-      </div>
-    </footer>
+    <Footer />
   </main>
 </Layout>
 
@@ -74,7 +62,7 @@ const meta = {
       backdrop-filter: blur(40px);
     }
     99% {
-      z-index: 20;
+      z-index: 30;
     }
     to {
       background-color: transparent;

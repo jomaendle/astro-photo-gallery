@@ -53,9 +53,9 @@ export default function ImageSlides({
     <div className={"flex h-full flex-col gap-2 "}>
       <img
         src={image.src}
-        alt=""
+        alt={image.location}
         className={[
-          "relative z-10 overflow-hidden object-contain object-center opacity-0 transition-opacity md:object-left-top",
+          "relative z-10 overflow-hidden object-contain object-center opacity-0 transition-opacity lg:object-left-top",
           IMAGE_ID,
         ].join(" ")}
         {...image.attributes}
