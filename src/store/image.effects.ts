@@ -58,19 +58,30 @@ $imageShareClick.listen(async (event) => {
   }
 
   const url = new URL(window.location.href);
-  await navigator.clipboard.writeText(url.href);
 
-  try {
-    await navigator.share({
-      url: url.href,
-      title: "the beauty of earth",
-      text: "Photography by Johannes Maendle",
-    });
-    console.log("Data was shared successfully");
-  } catch (err) {
-    // @ts-ignore
-    console.error("Share failed:", err.message);
+  if (navigator.share) {
+    console.log("Share API is supported in this browser");
+    try {
+      await navigator.share({
+        url: url.href,
+        title: "the beauty of earth",
+        text: "Photography by Johannes Maendle",
+      });
+      console.log("Data was shared successfully");
+      showToast(event.toastMessage);
+    } catch (err) {
+      // @ts-ignore
+      console.error("Share failed:", err.message);
+    }
+  } else if (navigator.clipboard) {
+    try {
+      await navigator.clipboard.writeText(url.href);
+      console.log("URL was copied to clipboard");
+      showToast(event.toastMessage);
+    } catch (err) {
+      console.error("Copy failed:", err);
+    }
+  } else {
+    showToast("Share and Clipboard API are not supported in this browser");
   }
-
-  showToast(event.toastMessage);
 });
