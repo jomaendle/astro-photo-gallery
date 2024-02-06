@@ -62,13 +62,17 @@ $imageShareClick.listen(async (event) => {
   if (navigator.share) {
     console.log("Share API is supported in this browser");
     try {
-      await navigator.share({
+      const res = await navigator.share({
         url: url.href,
         title: "the beauty of earth",
         text: "Photography by Johannes Maendle",
       });
       console.log("Data was shared successfully");
       showToast(event.toastMessage);
+
+      if (navigator.vibrate) {
+        navigator.vibrate(200);
+      }
     } catch (err) {
       // @ts-ignore
       console.error("Share failed:", err.message);
