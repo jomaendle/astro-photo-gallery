@@ -50,12 +50,12 @@ export default function ImageSlides({
   }
 
   return (
-    <div className={"flex h-full flex-col gap-2 "}>
+    <div className={"flex h-full flex-col items-center gap-2 "}>
       <img
         src={image.src}
         alt={image.location}
         className={[
-          "relative z-10 overflow-hidden object-contain object-center opacity-0 transition-opacity lg:object-left-top",
+          "relative z-10 overflow-hidden object-contain object-center opacity-0 transition-opacity ",
           IMAGE_ID,
         ].join(" ")}
         {...image.attributes}
@@ -63,7 +63,7 @@ export default function ImageSlides({
         loading={index === 0 ? "eager" : "lazy"}
       />
       <div className="swiper-lazy-preloader swiper-lazy-preloader-white flex-1"></div>
-      <div className={"flex items-center gap-4 md:flex-row"}>
+      <div className={"flex w-full items-center gap-4 md:w-auto md:flex-row"}>
         <p className={"text-transparent-500 flex-1 text-sm"}>
           {image.location}
         </p>

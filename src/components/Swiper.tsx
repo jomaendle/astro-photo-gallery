@@ -57,7 +57,6 @@ export default function SwiperWrapper() {
         <SwiperSlide
           key={image.src}
           className={"flex h-full justify-center overflow-hidden"}
-          virtualIndex={index}
         >
           <ImageSlides image={image} index={index} />
         </SwiperSlide>
