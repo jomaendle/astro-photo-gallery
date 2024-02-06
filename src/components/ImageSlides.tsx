@@ -44,7 +44,7 @@ export default function ImageSlides({
 
     $imageShareClick.set({
       image: newImage,
-      toastMessage: "Image link copied to clipboard",
+      toastMessage: "Copied image link!",
       icon: "bi:check",
     });
   }

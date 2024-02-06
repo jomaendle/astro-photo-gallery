@@ -11,7 +11,7 @@ import {
 } from "../util/image-fade.util.ts";
 import { getAllImageElements, getCurrentImageElement } from "../util/images.ts";
 import { writeActiveImageIdToUrl } from "../util/url.util.ts";
-import { showToast, TOAST_CONTENT, TOAST_WRAPPER_ID } from "../util/toast.ts";
+import { showToast } from "../util/toast.ts";
 
 const allImages = await getCollection("images");
 
@@ -59,6 +59,18 @@ $imageShareClick.listen(async (event) => {
 
   const url = new URL(window.location.href);
   await navigator.clipboard.writeText(url.href);
+
+  try {
+    await navigator.share({
+      url: url.href,
+      title: "the beauty of earth",
+      text: "Photography by Johannes Maendle",
+    });
+    console.log("Data was shared successfully");
+  } catch (err) {
+    // @ts-ignore
+    console.error("Share failed:", err.message);
+  }
 
   showToast(event.toastMessage);
 });

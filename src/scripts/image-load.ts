@@ -11,7 +11,6 @@ window.addEventListener("load", () => {
   let interval = setInterval(() => {
     if (document.readyState === "complete") {
       clearInterval(interval);
-      console.info("DOM loaded. Image load script loaded.");
 
       init();
     }

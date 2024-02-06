@@ -3,8 +3,6 @@ export function setImageFadeInStyle(image: HTMLImageElement) {
     throw new Error("setImageFadeInStyle: Image not found");
   }
 
-  console.log("setImageFadeInStyle: Image found", image.alt);
-
   image.classList.add("opacity-100");
   image.classList.remove("opacity-0");
 }
