@@ -1,0 +1,12 @@
+@keyframes stroke-animation {
+  from {
+    stroke-dashoffset: 685;
+  }
+  to {
+    stroke-dashoffset: -685;
+  }
+}
+
+.animate-stroke path {
+  animation: stroke-animation 2s linear infinite;
+}
