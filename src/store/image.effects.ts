@@ -3,8 +3,8 @@ import {
   $imageShareClick,
   $slideChange,
   $toastShowing,
+  type ImageShareClickPayload,
 } from "./image.store.ts";
-import { type CollectionEntry, getCollection } from "astro:content";
 import {
   setImageFadeInStyle,
   setImageFadeOutStyle,
@@ -13,26 +13,26 @@ import { getAllImageElements, getCurrentImageElement } from "../util/images.ts";
 import { writeActiveImageIdToUrl } from "../util/url.util.ts";
 import { showToast } from "../util/toast.ts";
 
-const allImages = await getCollection("images");
+/*const allImages = await getCollection("images");*/
 
 /**
  * Sets the background color and background image of the document.
  * It uses the current image index to get the image data.
  */
-$currentImageIndex.subscribe(async (index) => {
+/*$currentImageIndex.subscribe(async (index) => {
   const image: CollectionEntry<"images"> = allImages[index];
 
   document.documentElement.style.setProperty(
     "--backgroundColor",
     image.data.color
   );
-});
+});*/
 
 /**
  * Listens to the slide change event.
  * It fades in the current image and fades out the previous image.
  */
-$slideChange.listen(({ activeIndex, previousIndex }) => {
+/*$slideChange.listen(({ activeIndex, previousIndex }) => {
   if (activeIndex === previousIndex) {
     return;
   }
@@ -50,9 +50,9 @@ $slideChange.listen(({ activeIndex, previousIndex }) => {
   const previousImage = images[previousIndex] as HTMLImageElement;
 
   setImageFadeOutStyle(previousImage);
-});
+});*/
 
-$imageShareClick.listen(async (event) => {
+$imageShareClick.listen(async (event: ImageShareClickPayload | null) => {
   if (!event || $toastShowing.get()) {
     return;
   }

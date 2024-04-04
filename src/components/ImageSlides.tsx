@@ -2,8 +2,6 @@ import React, { type SyntheticEvent, useEffect, useRef, useState } from "react";
 import { type GetImageResult } from "astro";
 import { setImageFadeInStyle } from "../util/image-fade.util.ts";
 import { IMAGE_ID } from "../util/constants.ts";
-import { createDownloadElement } from "../util/dom.util.ts";
-import { getCollection } from "astro:content";
 import IconButton from "./IconButton.tsx";
 import { $imageShareClick } from "../store/image.store.ts";
 
@@ -46,29 +44,15 @@ export default function ImageSlides({
     setImageLoaded(true);
   }
 
-  async function downloadImage() {
-    const allImages = await getCollection("images");
-    const newImage = allImages.find((img) => img.data.id === image.id);
-
-    if (!newImage) {
-      return console.error("Image not found");
-    }
-
-    createDownloadElement(newImage.data.image.src, image.location);
-  }
-
   async function shareImage() {
-    const allImages = await getCollection("images");
-    const newImage = allImages.find((img) => img.data.id === image.id);
+    const newImage = image.id;
 
     if (!newImage) {
       return console.error("Image not found");
     }
 
     $imageShareClick.set({
-      image: newImage,
       toastMessage: "Copied image link!",
-      icon: "bi:check",
     });
   }
 
@@ -142,12 +126,6 @@ export default function ImageSlides({
             </p>
 
             <div className={"flex gap-1"}>
-              <IconButton
-                click={downloadImage}
-                tooltip={"Download this image"}
-                icon={"bi:download"}
-              />
-
               <IconButton
                 click={shareImage}
                 tooltip={"Share this image"}
