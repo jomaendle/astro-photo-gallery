@@ -11,7 +11,13 @@ import { onImageChange } from "../util/images.ts";
 import { navigateToImage } from "../util/url.util.ts";
 import { Pagination } from "swiper/modules";
 
-export default function SwiperWrapper({ images }: { images: ImageWithMeta[] }) {
+export default function SwiperWrapper({
+  images,
+  lowResImages,
+}: {
+  images: ImageWithMeta[];
+  lowResImages: ImageWithMeta[];
+}) {
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
 
   useEffect(() => {
@@ -48,7 +54,11 @@ export default function SwiperWrapper({ images }: { images: ImageWithMeta[] }) {
           key={image.src}
           className={"flex h-full justify-center overflow-hidden"}
         >
-          <ImageSlides image={image} index={index} />
+          <ImageSlides
+            image={image}
+            imagePreview={lowResImages[index]}
+            index={index}
+          />
         </SwiperSlide>
       );
     }

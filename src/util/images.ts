@@ -17,7 +17,8 @@ export function getAllImageElements(): HTMLImageElement[] {
 }
 
 export async function loadImages(
-  preferredImageWidth: number
+  preferredImageWidth: number,
+  quality?: number
 ): Promise<ImageWithMeta[]> {
   const imageCollection = await getCollection("images");
   return await Promise.all(
@@ -25,6 +26,7 @@ export async function loadImages(
       const imageResult = await getImage({
         src: image.data.image,
         width: preferredImageWidth,
+        quality,
       });
 
       return {
