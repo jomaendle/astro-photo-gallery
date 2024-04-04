@@ -2,11 +2,14 @@
 import Layout from "../layouts/Layout.astro";
 import SwiperWrapper from "../components/Swiper";
 import Footer from "../components/Footer.astro";
+import { loadImages } from "../util/images";
 
 const meta = {
   title: "The Beauty of Earth",
   description: "Photography from around the world.",
 };
+
+const images = await loadImages(1000);
 ---
 
 <Layout title={meta.title} description={meta.description}>
@@ -41,7 +44,7 @@ const meta = {
     </div>
 
     <div class="col-span-2 h-full overflow-hidden pb-16 md:pb-2 lg:col-start-2">
-      <SwiperWrapper client:load />
+      <SwiperWrapper images={images} client:load />
     </div>
 
     <Footer />

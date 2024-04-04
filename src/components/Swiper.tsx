@@ -4,16 +4,14 @@ import "swiper/css";
 import "swiper/css/pagination";
 
 import React, { useEffect, useState } from "react";
-import { getImageWidthBasedOnDeviceWidth } from "../util/media-query.util.ts";
 import { $currentImageIndex, $slideChange } from "../store/image.store.ts";
 import ImageButtons from "./ImageButtons.tsx";
 import ImageSlides, { type ImageWithMeta } from "./ImageSlides.tsx";
-import { loadImages, onImageChange } from "../util/images.ts";
+import { onImageChange } from "../util/images.ts";
 import { navigateToImage } from "../util/url.util.ts";
 import { Pagination } from "swiper/modules";
 
-export default function SwiperWrapper() {
-  const [images, setImages] = useState<ImageWithMeta[]>([]);
+export default function SwiperWrapper({ images }: { images: ImageWithMeta[] }) {
   const [swiper, setSwiper] = useState<SwiperClass | null>(null);
 
   useEffect(() => {
@@ -27,14 +25,6 @@ export default function SwiperWrapper() {
       }
     });
   }, [swiper]);
-
-  useEffect(() => {
-    const preferredImageWidth = getImageWidthBasedOnDeviceWidth();
-
-    loadImages(preferredImageWidth).then((images: ImageWithMeta[]) => {
-      setImages(images);
-    });
-  }, []);
 
   useEffect(() => {
     if (swiper && images) {

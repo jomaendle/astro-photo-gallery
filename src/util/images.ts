@@ -25,7 +25,6 @@ export async function loadImages(
       const imageResult = await getImage({
         src: image.data.image,
         width: preferredImageWidth,
-        quality: 90,
       });
 
       return {
