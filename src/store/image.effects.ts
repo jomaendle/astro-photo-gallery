@@ -1,56 +1,9 @@
 import {
-  $currentImageIndex,
   $imageShareClick,
-  $slideChange,
   $toastShowing,
   type ImageShareClickPayload,
 } from "./image.store.ts";
-import {
-  setImageFadeInStyle,
-  setImageFadeOutStyle,
-} from "../util/image-fade.util.ts";
-import { getAllImageElements, getCurrentImageElement } from "../util/images.ts";
-import { writeActiveImageIdToUrl } from "../util/url.util.ts";
 import { showToast } from "../util/toast.ts";
-
-/*const allImages = await getCollection("images");*/
-
-/**
- * Sets the background color and background image of the document.
- * It uses the current image index to get the image data.
- */
-/*$currentImageIndex.subscribe(async (index) => {
-  const image: CollectionEntry<"images"> = allImages[index];
-
-  document.documentElement.style.setProperty(
-    "--backgroundColor",
-    image.data.color
-  );
-});*/
-
-/**
- * Listens to the slide change event.
- * It fades in the current image and fades out the previous image.
- */
-/*$slideChange.listen(({ activeIndex, previousIndex }) => {
-  if (activeIndex === previousIndex) {
-    return;
-  }
-
-  const currentImage = getCurrentImageElement(activeIndex);
-
-  const image: CollectionEntry<"images"> = allImages[activeIndex];
-  writeActiveImageIdToUrl(image.data.id ?? "");
-
-  if (currentImage?.complete) {
-    setImageFadeInStyle(currentImage);
-  }
-
-  const images = getAllImageElements();
-  const previousImage = images[previousIndex] as HTMLImageElement;
-
-  setImageFadeOutStyle(previousImage);
-});*/
 
 $imageShareClick.listen(async (event: ImageShareClickPayload | null) => {
   if (!event || $toastShowing.get()) {
@@ -62,7 +15,7 @@ $imageShareClick.listen(async (event: ImageShareClickPayload | null) => {
   if (navigator.share) {
     console.log("Share API is supported in this browser");
     try {
-      const res = await navigator.share({
+      await navigator.share({
         url: url.href,
         title: "the beauty of earth",
         text: "Photography by Johannes Maendle",

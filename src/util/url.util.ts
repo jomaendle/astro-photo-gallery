@@ -25,5 +25,5 @@ export function navigateToImage(swiper: Swiper, images: ImageWithMeta[]): void {
   }
 
   $currentImageIndex.set(imageIndex);
-  swiper.slideTo(imageIndex, 0, false);
+  swiper.slideTo(imageIndex, 100, false);
 }

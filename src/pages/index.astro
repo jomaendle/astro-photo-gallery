@@ -26,6 +26,7 @@ async function loadImages(
 
       return {
         ...imageResult,
+        color: image.data.color,
         location: image.data.location,
         id: image.data.id,
       };

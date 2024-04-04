@@ -10,18 +10,17 @@ import "./ImageSlides.css";
 export type ImageWithMeta = GetImageResult & {
   location: string;
   id: string;
+  color: string;
 };
 
 export default function ImageSlides({
   image,
-  index,
   imagePreview,
 }: {
   image: ImageWithMeta;
   imagePreview: ImageWithMeta;
-  index: number;
 }) {
-  const bgImageRef = useRef<HTMLDivElement>(null);
+  const bgImageRef = useRef<HTMLImageElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -82,15 +81,20 @@ export default function ImageSlides({
         </div>
       )}
 
-      <div className={"flex h-full flex-col items-center gap-2 "}>
-        <div
+      <div className={"relative flex h-full flex-col items-center gap-2"}>
+        <img
           ref={bgImageRef}
-          className={`z-0 overflow-hidden bg-cover bg-center blur-[30px]`}
+          src={imagePreview.src}
+          alt={"Preview image"}
+          className={`absolute bottom-4 z-10 h-full scale-90 object-contain object-top blur-xl ${
+            imageLoaded ? "opacity-0" : ""
+          }`}
           style={{
-            backgroundImage: `url(${imagePreview.src})`,
             transition: "all 0.5s ease",
           }}
-        >
+        />
+
+        <div className={`z-10 overflow-hidden`}>
           <img
             src={image.src}
             alt={image.location}

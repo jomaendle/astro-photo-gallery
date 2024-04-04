@@ -25,3 +25,7 @@ export function removeClassesFromElement(
     element.classList.remove(className);
   });
 }
+
+export function setBackgroundColorCssVariable(color: string) {
+  document.documentElement.style.setProperty("--backgroundColor", color);
+}
