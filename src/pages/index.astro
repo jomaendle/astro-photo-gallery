@@ -1,33 +1,44 @@
 ---
+import type { ImageWithMeta } from "../components/ImageSlides";
+import { type CollectionEntry, getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import SwiperWrapper from "../components/Swiper";
 import Footer from "../components/Footer.astro";
-import { loadImages } from "../util/images";
+import { getImage } from "astro:assets";
 
 const meta = {
   title: "The Beauty of Earth",
   description: "Photography from around the world.",
 };
 
+async function loadImages(
+  preferredImageWidth: number,
+  quality?: number
+): Promise<ImageWithMeta[]> {
+  const imageCollection = await getCollection("images");
+  return await Promise.all(
+    imageCollection.map(async (image: CollectionEntry<"images">) => {
+      const imageResult = await getImage({
+        src: image.data.image,
+        width: preferredImageWidth,
+        quality,
+      });
+
+      return {
+        ...imageResult,
+        color: image.data.color,
+        location: image.data.location,
+        id: image.data.id,
+      };
+    })
+  );
+}
+
 const lowResImagePreview = await loadImages(60, 10);
 const images = await loadImages(1000);
 ---
 
 <Layout title={meta.title} description={meta.description}>
-  <div
-    style="animation: 2s ease-in bg-animation forwards;"
-    onanimationend="this.style.display = 'none'"
-    class="bg-animation
-   bg-[rgba(0,
-    0,
-    0,
-    0.8)]
-    pointer-events-none absolute inset-0
-    z-30
-    backdrop-blur-[40px]"
-  >
-  </div>
-
   <main
     class="flex h-full flex-col gap-8 bg-transparent px-4 pt-4 md:gap-12 md:px-8 md:pt-8"
   >

@@ -19,6 +19,21 @@ const { title, description } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
 
+    <style>
+      html {
+        font-family: system-ui, sans-serif;
+        height: 100%;
+        color: #fff;
+      }
+
+      body {
+        height: 100%;
+        overflow: hidden;
+        background: var(--backgroundColor, #13151a);
+        transition: background 500ms ease-out;
+      }
+    </style>
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url} />
@@ -37,19 +52,6 @@ const { title, description } = Astro.props;
     <Toast />
 
     <style is:global>
-      html {
-        font-family: system-ui, sans-serif;
-        height: 100%;
-        color: #fff;
-      }
-
-      body {
-        height: 100%;
-        overflow: hidden;
-        background: var(--backgroundColor, #13151a);
-        transition: background 500ms ease-out;
-      }
-
       .icon {
         @apply text-gray-200;
       }

@@ -2,26 +2,25 @@ import React, { type SyntheticEvent, useEffect, useRef, useState } from "react";
 import { type GetImageResult } from "astro";
 import { setImageFadeInStyle } from "../util/image-fade.util.ts";
 import { IMAGE_ID } from "../util/constants.ts";
-import { createDownloadElement } from "../util/dom.util.ts";
-import { getCollection } from "astro:content";
 import IconButton from "./IconButton.tsx";
 import { $imageShareClick } from "../store/image.store.ts";
+
+import "./ImageSlides.css";
 
 export type ImageWithMeta = GetImageResult & {
   location: string;
   id: string;
+  color: string;
 };
 
 export default function ImageSlides({
   image,
-  index,
   imagePreview,
 }: {
   image: ImageWithMeta;
   imagePreview: ImageWithMeta;
-  index: number;
 }) {
-  const bgImageRef = useRef<HTMLDivElement>(null);
+  const bgImageRef = useRef<HTMLImageElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -46,29 +45,15 @@ export default function ImageSlides({
     setImageLoaded(true);
   }
 
-  async function downloadImage() {
-    const allImages = await getCollection("images");
-    const newImage = allImages.find((img) => img.data.id === image.id);
-
-    if (!newImage) {
-      return console.error("Image not found");
-    }
-
-    createDownloadElement(newImage.data.image.src, image.location);
-  }
-
   async function shareImage() {
-    const allImages = await getCollection("images");
-    const newImage = allImages.find((img) => img.data.id === image.id);
+    const newImage = image.id;
 
     if (!newImage) {
       return console.error("Image not found");
     }
 
     $imageShareClick.set({
-      image: newImage,
       toastMessage: "Copied image link!",
-      icon: "bi:check",
     });
   }
 
@@ -81,7 +66,7 @@ export default function ImageSlides({
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 300 150"
-            className={"w-[100px]"}
+            className={"animate-stroke w-[100px]"}
           >
             <path
               fill="none"
@@ -91,29 +76,25 @@ export default function ImageSlides({
               strokeDasharray="300 385"
               strokeDashoffset="0"
               d="M275 75c0 31-27 50-50 50-58 0-92-100-150-100-28 0-50 22-50 50s23 50 50 50c58 0 92-100 150-100 24 0 50 19 50 50Z"
-            >
-              <animate
-                attributeName="stroke-dashoffset"
-                calcMode="spline"
-                dur="2"
-                values="685;-685"
-                keySplines="0 0 1 1"
-                repeatCount="indefinite"
-              ></animate>
-            </path>
+            ></path>
           </svg>
         </div>
       )}
 
-      <div className={"flex h-full flex-col items-center gap-2 "}>
-        <div
+      <div className={"relative flex h-full flex-col items-center gap-2"}>
+        <img
           ref={bgImageRef}
-          className={`z-0 overflow-hidden bg-cover bg-center blur-[30px]`}
+          src={imagePreview.src}
+          alt={"Preview image"}
+          className={`absolute bottom-4 z-10 h-full scale-90 object-contain object-top blur-xl ${
+            imageLoaded ? "opacity-0" : ""
+          }`}
           style={{
-            backgroundImage: `url(${imagePreview.src})`,
             transition: "all 0.5s ease",
           }}
-        >
+        />
+
+        <div className={`z-10 overflow-hidden`}>
           <img
             src={image.src}
             alt={image.location}
@@ -142,12 +123,6 @@ export default function ImageSlides({
             </p>
 
             <div className={"flex gap-1"}>
-              <IconButton
-                click={downloadImage}
-                tooltip={"Download this image"}
-                icon={"bi:download"}
-              />
-
               <IconButton
                 click={shareImage}
                 tooltip={"Share this image"}

@@ -8,8 +8,9 @@ import { $currentImageIndex, $slideChange } from "../store/image.store.ts";
 import ImageButtons from "./ImageButtons.tsx";
 import ImageSlides, { type ImageWithMeta } from "./ImageSlides.tsx";
 import { onImageChange } from "../util/images.ts";
-import { navigateToImage } from "../util/url.util.ts";
+import { navigateToImage, writeActiveImageIdToUrl } from "../util/url.util.ts";
 import { Pagination } from "swiper/modules";
+import { setBackgroundColorCssVariable } from "../util/dom.util.ts";
 
 export default function SwiperWrapper({
   images,
@@ -35,11 +36,18 @@ export default function SwiperWrapper({
   useEffect(() => {
     if (swiper && images) {
       navigateToImage(swiper, images);
+
+      const currentImage = images[swiper.activeIndex];
+      setBackgroundColorCssVariable(currentImage.color);
     }
   }, [images, swiper]);
 
   function onSlideChange(swiper: SwiperClass) {
     $currentImageIndex.set(swiper.activeIndex);
+
+    const currentImage = images[swiper.activeIndex];
+    setBackgroundColorCssVariable(currentImage.color);
+    writeActiveImageIdToUrl(currentImage.id ?? "");
 
     $slideChange.set({
       previousIndex: swiper.previousIndex,
@@ -54,11 +62,7 @@ export default function SwiperWrapper({
           key={image.src}
           className={"flex h-full justify-center overflow-hidden"}
         >
-          <ImageSlides
-            image={image}
-            imagePreview={lowResImages[index]}
-            index={index}
-          />
+          <ImageSlides image={image} imagePreview={lowResImages[index]} />
         </SwiperSlide>
       );
     }

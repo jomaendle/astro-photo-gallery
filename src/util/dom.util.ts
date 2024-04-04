@@ -26,11 +26,6 @@ export function removeClassesFromElement(
   });
 }
 
-export function createDownloadElement(src: string, name: string): void {
-  const link = document.createElement("a");
-  link.href = src;
-  link.download = `${name}.jpg`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+export function setBackgroundColorCssVariable(color: string) {
+  document.documentElement.style.setProperty("--backgroundColor", color);
 }
