@@ -10,6 +10,7 @@ import ImageButtons from "@/components/ImageButtons.tsx";
 import { useEffect, useState } from "react";
 import type { ImageWithMeta } from "@/components/ImageSlides.tsx";
 import { setBackgroundColorCssVariable } from "@/util/dom.util.ts";
+import { getImageIndex, writeActiveImageIdToUrl } from "@/util/url.util.ts";
 
 export function ImageCarousel({
   images,
@@ -19,6 +20,19 @@ export function ImageCarousel({
   lowResImages: ImageWithMeta[];
 }) {
   const [api, setApi] = useState<CarouselApi>();
+  const [startIndex, setStartIndex] = useState(0);
+
+  useEffect(() => {
+    setStartIndex(getImageIndex(images) ?? 0);
+  }, []);
+
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    api.scrollTo(startIndex);
+  }, [api, startIndex]);
 
   useEffect(() => {
     if (!api) {
@@ -30,7 +44,6 @@ export function ImageCarousel({
     api.on("select", () => updateBackground());
 
     window.addEventListener("keydown", (event) => {
-      console.log(event.key);
       if (event.key === "ArrowRight") {
         onImageChange("next");
       }
@@ -64,6 +77,11 @@ export function ImageCarousel({
 
     const currentImage = images[api.selectedScrollSnap()];
     setBackgroundColorCssVariable(currentImage.color);
+
+    if (!currentImage.id) {
+      return;
+    }
+    writeActiveImageIdToUrl(currentImage.id);
   }
 
   function isLandscape(image: ImageWithMeta) {
