@@ -12,13 +12,7 @@ import type { ImageWithMeta } from "@/components/ImageSlides.tsx";
 import { setBackgroundColorCssVariable } from "@/util/dom.util.ts";
 import { getImageIndex, writeActiveImageIdToUrl } from "@/util/url.util.ts";
 
-export function ImageCarousel({
-  images,
-  lowResImages,
-}: {
-  images: ImageWithMeta[];
-  lowResImages: ImageWithMeta[];
-}) {
+export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
   const [api, setApi] = useState<CarouselApi>();
   const [startIndex, setStartIndex] = useState(0);
 
@@ -106,25 +100,25 @@ export function ImageCarousel({
           className={"z-10 hidden h-10 w-10 shrink-0 sm:flex"}
         />
         <CarouselContent className="flex h-full shrink-0 items-center">
-          {(lowResImages ?? []).map((img, index) => (
+          {(images ?? []).map((img, index) => (
             <CarouselItem
               key={index}
               className="flex h-full max-h-[700px] justify-center"
             >
               <img
-                src={images[index].src}
+                src={img.src}
                 alt=""
                 style={{
-                  backgroundColor: images[index].color,
-                  aspectRatio: isLandscape(images[index]) ? "16/11" : "10/16",
+                  backgroundColor: img.color,
+                  aspectRatio: isLandscape(img) ? "16/11" : "10/16",
                 }}
-                width={images[index].options?.width}
-                height={images[index].options?.height}
+                width={img.options?.width}
+                height={img.options?.height}
                 loading={index === 0 ? "eager" : "lazy"}
-                className={`border-8 border-white object-cover ${
+                className={`h-full border-8 border-white object-cover ${
                   isLandscape(images[index])
                     ? ""
-                    : "max-w-[300px] md:max-w-[500px]"
+                    : "max-w-[300px] md:max-w-[400px]"
                 }`}
               />
             </CarouselItem>

@@ -1,13 +1,20 @@
 ---
 import Toast from "../components/Toast.astro";
 import "../styles/styles.css";
+import Footer from "../components/Footer.astro";
+import { GalleryHorizontal, LayoutGrid } from "lucide-react";
+import { ImageCarousel } from "../components/ImageCarousel";
 
-interface Props {
-  title: string;
-  description: string;
-}
+const meta = {
+  title: "The Beauty of Earth",
+  description: "Photography from around the world.",
+};
 
-const { title, description } = Astro.props;
+const { title, description } = meta;
+
+const activeItem: "grid" | "carousel" = Astro.url.href.endsWith("/grid")
+  ? "grid"
+  : "carousel";
 ---
 
 <!doctype html>
@@ -26,6 +33,7 @@ const { title, description } = Astro.props;
         font-family: system-ui, sans-serif;
         height: 100%;
         color: #fff;
+        scroll-behavior: smooth;
       }
 
       body {
@@ -33,6 +41,15 @@ const { title, description } = Astro.props;
         overflow: hidden;
         background: var(--backgroundColor, #13151a);
         transition: background 500ms ease-out;
+        scroll-behavior: smooth;
+      }
+
+      .layout-item {
+        @apply flex items-center justify-center rounded-full p-2;
+      }
+
+      .layout-item.active {
+        @apply bg-white/10;
       }
     </style>
 
@@ -49,7 +66,42 @@ const { title, description } = Astro.props;
     <meta property="twitter:description" content={description} />
   </head>
   <body>
-    <slot />
+    <main
+      style="scrollbar-gutter: stable;"
+      class="flex h-full flex-col gap-8 overflow-auto bg-transparent px-4 pt-4 md:gap-12 md:px-8 md:pt-8"
+    >
+      <div class="col-span-2 flex flex-col gap-4 lg:gap-6">
+        <h1
+          class="z-10 px-4 text-center text-4xl font-bold text-white md:p-0 md:text-6xl"
+          style="letter-spacing: -1.2px"
+        >
+          the beauty of earth
+        </h1>
+        <p class="description text-transparent-500 hidden text-center md:block">
+          images from around the world. <br />
+           explore the beauty of our planet.
+        </p>
+      </div>
+
+      <section class="flex items-center justify-center gap-4 text-white/80">
+        <a
+          href="/"
+          class={`layout-item ${activeItem === "carousel" ? "active" : ""}`}
+        >
+          <GalleryHorizontal strokeWidth={1} size="20" />
+        </a>
+        <a
+          href="/grid"
+          class={`layout-item ${activeItem === "grid" ? "active" : ""}`}
+        >
+          <LayoutGrid strokeWidth={1} size="20" />
+        </a>
+      </section>
+
+      <slot />
+
+      <Footer />
+    </main>
 
     <Toast />
 
@@ -74,6 +126,25 @@ const { title, description } = Astro.props;
         &:hover {
           color: inherit;
           opacity: 0.5;
+        }
+      }
+
+      p.description {
+        line-height: 18px;
+      }
+
+      @keyframes bg-animation {
+        from {
+          background-color: rgba(0, 0, 0, 0.8);
+          backdrop-filter: blur(40px);
+        }
+        99% {
+          z-index: 30;
+        }
+        to {
+          background-color: transparent;
+          backdrop-filter: blur(0px);
+          z-index: -1;
         }
       }
     </style>
