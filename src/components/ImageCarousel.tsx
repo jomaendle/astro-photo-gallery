@@ -105,22 +105,25 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
               key={index}
               className="flex h-full max-h-[700px] justify-center"
             >
-              <img
-                src={img.src}
-                alt=""
-                style={{
-                  backgroundColor: img.color,
-                  aspectRatio: isLandscape(img) ? "16/11" : "10/16",
-                }}
-                width={img.options?.width}
-                height={img.options?.height}
-                loading={index === 0 ? "eager" : "lazy"}
-                className={`h-full border-8 border-white object-cover ${
-                  isLandscape(images[index])
-                    ? ""
-                    : "max-w-[300px] md:max-w-[400px]"
-                }`}
-              />
+              <div className={"flex flex-col gap-2"}>
+                <img
+                  src={img.src}
+                  alt=""
+                  style={{
+                    backgroundColor: img.color,
+                    aspectRatio: isLandscape(img) ? "16/11" : "12/16",
+                  }}
+                  width={img.options?.width}
+                  height={img.options?.height}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  className={`h-full  object-cover ${
+                    isLandscape(images[index])
+                      ? ""
+                      : "max-w-[300px] md:max-w-[400px]"
+                  }`}
+                />
+                <p className={"text-sm text-white/70"}>{img.location}</p>
+              </div>
             </CarouselItem>
           ))}
         </CarouselContent>
