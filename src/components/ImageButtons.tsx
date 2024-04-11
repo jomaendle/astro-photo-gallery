@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { type ReactElement, useRef, useState } from "react";
 import { Icon } from "@iconify/react";
 import { NEXT_BUTTON_ID, PREV_BUTTON_ID } from "../util/constants.ts";
 import Tooltip from "./Tooltip.tsx";
@@ -11,11 +11,11 @@ export interface ImageButtonsProps {
 export default function ImageButtons({
   onPrevClick,
   onNextClick,
-}: ImageButtonsProps): React.ReactElement {
-  const prevButtonRef = React.useRef<HTMLButtonElement | null>(null);
-  const nextButtonRef = React.useRef<HTMLButtonElement | null>(null);
+}: ImageButtonsProps): ReactElement {
+  const prevButtonRef = useRef<HTMLButtonElement | null>(null);
+  const nextButtonRef = useRef<HTMLButtonElement | null>(null);
 
-  const [showTooltip, setShowTooltip] = React.useState<{
+  const [showTooltip, setShowTooltip] = useState<{
     show: boolean;
     button: "next" | "prev";
   }>({

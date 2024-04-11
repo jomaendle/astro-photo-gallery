@@ -3,8 +3,17 @@
   "compilerOptions": {
     "strictNullChecks": true,
     "allowJs": true,
+    "baseUrl": ".",
     "jsx": "react-jsx",
     "jsxImportSource": "react",
-    "strict": true
+    "strict": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@/lib/*": [
+        "./src/lib/*"
+      ],
+    }
   }
 }

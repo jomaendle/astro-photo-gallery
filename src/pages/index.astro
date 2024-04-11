@@ -1,91 +1,16 @@
 ---
-import type { ImageWithMeta } from "../components/ImageSlides";
-import { type CollectionEntry, getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
-import SwiperWrapper from "../components/Swiper";
-import Footer from "../components/Footer.astro";
-import { getImage } from "astro:assets";
+import { ImageCarousel } from "../components/ImageCarousel";
 
-const meta = {
-  title: "The Beauty of Earth",
-  description: "Photography from around the world.",
-};
+import { loadImages } from "../util/images";
 
-async function loadImages(
-  preferredImageWidth: number,
-  quality?: number
-): Promise<ImageWithMeta[]> {
-  const imageCollection = await getCollection("images");
-  return await Promise.all(
-    imageCollection.map(async (image: CollectionEntry<"images">) => {
-      const imageResult = await getImage({
-        src: image.data.image,
-        width: preferredImageWidth,
-        quality,
-      });
-
-      return {
-        ...imageResult,
-        color: image.data.color,
-        location: image.data.location,
-        id: image.data.id,
-      };
-    })
-  );
-}
-
-const lowResImagePreview = await loadImages(60, 10);
 const images = await loadImages(1000);
+
+console.log("xx", images);
 ---
 
-<Layout title={meta.title} description={meta.description}>
-  <main
-    class="flex h-full flex-col gap-8 bg-transparent px-4 pt-4 md:gap-12 md:px-8 md:pt-8"
-  >
-    <div class="col-span-2 flex flex-col gap-4 lg:gap-6">
-      <h1
-        class="z-10 px-4 text-center text-4xl font-bold md:p-0 md:text-6xl"
-        style="letter-spacing: -1.2px"
-      >
-        the beauty of earth
-      </h1>
-      <p class="description text-transparent-500 hidden text-center md:block">
-        images from around the world. <br />
-         explore the beauty of our planet.
-      </p>
-    </div>
-
-    <div class="col-span-2 h-full overflow-hidden pb-16 md:pb-2 lg:col-start-2">
-      <SwiperWrapper
-        images={images}
-        lowResImages={lowResImagePreview}
-        client:load
-      />
-    </div>
-
-    <Footer />
-  </main>
+<Layout>
+  <div class="col-span-2 h-full overflow-hidden pb-16 md:pb-2 lg:col-start-2">
+    <ImageCarousel images={images} client:load />
+  </div>
 </Layout>
-
-<script src="../scripts/image-load.ts"></script>
-
-<style>
-  p.description {
-    line-height: 18px;
-  }
-
-  @keyframes bg-animation {
-    from {
-      background-color: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(40px);
-    }
-    99% {
-      z-index: 30;
-    }
-    to {
-      background-color: transparent;
-      backdrop-filter: blur(0px);
-      z-index: -1;
-    }
-  }
-</style>

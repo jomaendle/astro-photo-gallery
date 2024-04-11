@@ -10,8 +10,10 @@ export function writeActiveImageIdToUrl(id: string) {
   window.history.pushState({}, "", url.toString());
 }
 
-export function navigateToImage(swiper: Swiper, images: ImageWithMeta[]): void {
+export function getImageIndex(images: ImageWithMeta[]): number | undefined {
   const urlParams = new URLSearchParams(window.location.search);
+
+  console.log(urlParams.get(IMAGE_URL_PARAM));
   const imageId = urlParams.get(IMAGE_URL_PARAM);
 
   if (!imageId) {
@@ -24,6 +26,5 @@ export function navigateToImage(swiper: Swiper, images: ImageWithMeta[]): void {
     return;
   }
 
-  $currentImageIndex.set(imageIndex);
-  swiper.slideTo(imageIndex, 100, false);
+  return imageIndex;
 }

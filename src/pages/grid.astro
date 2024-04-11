@@ -1,0 +1,38 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import Layout from "../layouts/Layout.astro";
+import { ImageCarousel } from "../components/ImageCarousel";
+
+const imageCollection = await getCollection("images");
+---
+
+<Layout>
+  <div
+    class="mx-auto grid h-full max-w-[1200px] gap-4 pb-16 md:grid-cols-2 md:pb-12"
+  >
+    {
+      imageCollection.map((image, index) => (
+        <div
+          class="relative w-full min-w-[300px] md:h-[400px]"
+          style={{
+            backgroundColor: image.data.color,
+          }}
+        >
+          <div class="-from-70% group absolute inset-0 z-10 flex h-full items-end from-black/70 to-50% transition-all hover:bg-gradient-to-t">
+            <p class="hidden p-4 text-white group-hover:block">
+              {image.data.location}
+            </p>
+          </div>
+          <Image
+            src={image.data.image}
+            height={600}
+            quality={95}
+            alt={image.data.location}
+            class="h-full w-full object-cover"
+          />
+        </div>
+      ))
+    }
+  </div>
+</Layout>
