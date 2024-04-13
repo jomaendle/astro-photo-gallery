@@ -42,11 +42,7 @@ export default function ImageButtons({
   }
 
   return (
-    <div
-      className={
-        "z-20 hidden justify-center gap-8 pb-2 md:mt-4 md:flex md:justify-start"
-      }
-    >
+    <div className={"z-20 hidden justify-center gap-4 pb-2 md:mt-4 md:flex"}>
       {showTooltip.show && getButtonRef() && (
         <Tooltip
           id={"image-button-tooltip"}
@@ -67,7 +63,7 @@ export default function ImageButtons({
       >
         <Icon
           icon={"carbon:previous-outline"}
-          width={42}
+          width={36}
           className={"icon icon-hover"}
         ></Icon>
       </button>
@@ -82,7 +78,7 @@ export default function ImageButtons({
       >
         <Icon
           icon={"carbon:next-outline"}
-          width={42}
+          width={36}
           className={"icon icon-hover"}
         ></Icon>
       </button>

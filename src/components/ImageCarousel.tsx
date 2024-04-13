@@ -7,7 +7,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import ImageButtons from "@/components/ImageButtons.tsx";
-import { useEffect, useState } from "react";
+import { type SyntheticEvent, useEffect, useState } from "react";
 import type { ImageWithMeta } from "@/components/ImageSlides.tsx";
 import { setBackgroundColorCssVariable } from "@/util/dom.util.ts";
 import { getImageIndex, writeActiveImageIdToUrl } from "@/util/url.util.ts";
@@ -112,8 +112,11 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
     return image.attributes?.width > image.attributes?.height;
   }
 
-  function onLoadingComplete(e) {
-    e.target.classList.remove("opacity-0");
+  function onLoadingComplete(e: SyntheticEvent<HTMLImageElement>) {
+    (e.target as HTMLElement).classList.remove("opacity-0");
+    (e.target as HTMLElement).parentElement
+      ?.querySelector(".location")
+      ?.classList.remove("opacity-0");
   }
 
   return (
@@ -135,26 +138,35 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
               key={index}
               className="flex h-full max-h-[700px] justify-center"
             >
-              <div className={"flex flex-col gap-2"}>
+              <div
+                className={"flex h-full flex-col gap-2"}
+                style={{
+                  aspectRatio: isLandscape(img) ? "16/11" : "12/16",
+                  maxWidth: isLandscape(img) ? "100%" : "400px",
+                }}
+              >
                 <img
                   id={img.id}
                   src={img.src}
                   alt={img.location}
                   style={{
                     backgroundColor: img.color,
-                    aspectRatio: isLandscape(img) ? "16/11" : "12/16",
+                    maxHeight: "calc(100% - (24px))",
                   }}
                   width={img.options?.width}
                   height={img.options?.height}
                   loading={index === 0 ? "eager" : "lazy"}
-                  className={`h-full object-cover opacity-0 transition-opacity duration-500 ${
-                    isLandscape(images[index])
-                      ? ""
-                      : "max-w-[300px] md:max-w-[400px]"
-                  }`}
+                  decoding={"async"}
+                  className={`object-cover opacity-0 transition-opacity duration-500`}
                   onLoad={onLoadingComplete}
                 />
-                <p className={"text-sm text-white/70"}>{img.location}</p>
+                <p
+                  className={
+                    "location text-center text-xs text-white/60 opacity-0 transition-opacity duration-500"
+                  }
+                >
+                  {img.location}
+                </p>
               </div>
             </CarouselItem>
           ))}

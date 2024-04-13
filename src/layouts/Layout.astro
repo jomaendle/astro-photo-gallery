@@ -69,7 +69,7 @@ const activeItem: "grid" | "carousel" = Astro.url.pathname.includes("grid")
   <body class="flex flex-col">
     <main
       style="scrollbar-gutter: stable;"
-      class="flex h-full flex-1 flex-col gap-8 overflow-auto bg-transparent px-4 pt-4 md:gap-12 md:px-8 md:pt-8"
+      class="flex h-full flex-1 flex-col gap-8 overflow-auto bg-transparent px-4 pt-4 md:gap-12 md:px-8"
     >
       <div class="col-span-2 flex flex-col gap-4 lg:gap-6">
         <h1
@@ -78,26 +78,28 @@ const activeItem: "grid" | "carousel" = Astro.url.pathname.includes("grid")
         >
           the beauty of earth
         </h1>
-        <p class="description text-transparent-500 hidden text-center md:block">
+        <p
+          class="description text-transparent-500 hidden text-center text-sm md:block"
+        >
           images from around the world. <br />
            explore the beauty of our planet.
         </p>
-      </div>
 
-      <section class="flex items-center justify-center gap-4 text-white/80">
-        <a
-          href="/"
-          class={`layout-item ${activeItem === "carousel" ? "active" : ""}`}
-        >
-          <GalleryHorizontal strokeWidth={1} size="20" />
-        </a>
-        <a
-          href="/grid"
-          class={`layout-item ${activeItem === "grid" ? "active" : ""}`}
-        >
-          <LayoutGrid strokeWidth={1} size="20" />
-        </a>
-      </section>
+        <section class="flex items-center justify-center gap-4 text-white/80">
+          <a
+            href="/"
+            class={`layout-item ${activeItem === "carousel" ? "active" : ""}`}
+          >
+            <GalleryHorizontal strokeWidth={1} size="20" />
+          </a>
+          <a
+            href="/grid"
+            class={`layout-item ${activeItem === "grid" ? "active" : ""}`}
+          >
+            <LayoutGrid strokeWidth={1} size="20" />
+          </a>
+        </section>
+      </div>
 
       <slot />
     </main>
@@ -131,6 +133,13 @@ const activeItem: "grid" | "carousel" = Astro.url.pathname.includes("grid")
 
       p.description {
         line-height: 18px;
+        display: none;
+      }
+
+      @media screen and (min-height: 670px) {
+        p.description {
+          display: block;
+        }
       }
 
       @keyframes bg-animation {
