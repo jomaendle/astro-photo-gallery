@@ -75,6 +75,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
     if (!currentImage.id) {
       return;
     }
+
     writeActiveImageIdToUrl(currentImage.id);
   }
 
@@ -108,7 +109,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
               <div className={"flex flex-col gap-2"}>
                 <img
                   src={img.src}
-                  alt=""
+                  alt={img.location}
                   style={{
                     backgroundColor: img.color,
                     aspectRatio: isLandscape(img) ? "16/11" : "12/16",
@@ -116,11 +117,12 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                   width={img.options?.width}
                   height={img.options?.height}
                   loading={index === 0 ? "eager" : "lazy"}
-                  className={`h-full  object-cover ${
+                  className={`h-full object-cover opacity-0 transition-opacity duration-500 ${
                     isLandscape(images[index])
                       ? ""
                       : "max-w-[300px] md:max-w-[400px]"
                   }`}
+                  onLoad={(e) => e.target.classList.remove("opacity-0")}
                 />
                 <p className={"text-sm text-white/70"}>{img.location}</p>
               </div>

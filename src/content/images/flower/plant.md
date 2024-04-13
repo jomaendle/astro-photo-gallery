@@ -1,6 +1,6 @@
 ---
-id: "24"
-color: "#4a5936"
+id: "7"
+color: "#4d623c"
 image: "./plant.jpg"
 location: "San Diego, California"
 ---

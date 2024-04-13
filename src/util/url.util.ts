@@ -1,5 +1,3 @@
-import { $currentImageIndex } from "../store/image.store.ts";
-import type Swiper from "swiper";
 import type { ImageWithMeta } from "../components/ImageSlides.tsx";
 
 const IMAGE_URL_PARAM = "image";
