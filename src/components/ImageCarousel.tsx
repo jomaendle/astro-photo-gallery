@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import type { ImageWithMeta } from "@/components/ImageSlides.tsx";
 import { setBackgroundColorCssVariable } from "@/util/dom.util.ts";
 import { getImageIndex, writeActiveImageIdToUrl } from "@/util/url.util.ts";
+import { NEXT_BUTTON_ID, PREV_BUTTON_ID } from "@/util/constants.ts";
 
 export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
   const [api, setApi] = useState<CarouselApi>();
@@ -39,10 +40,12 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
 
     window.addEventListener("keydown", (event) => {
       if (event.key === "ArrowRight") {
+        addFocusStyles(NEXT_BUTTON_ID);
         onImageChange("next");
       }
 
       if (event.key === "ArrowLeft") {
+        addFocusStyles(PREV_BUTTON_ID);
         onImageChange("prev");
       }
     });
@@ -51,6 +54,22 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
       api.destroy();
     };
   }, [api]);
+
+  function addFocusStyles(buttonId: string) {
+    const classes = [
+      "outline",
+      "outline-blue-300/80",
+      "rounded-full",
+      "-outline-offset-2",
+      "outline-2",
+    ];
+    const button = document.getElementById(buttonId);
+    button?.classList.add(...classes);
+
+    setTimeout(() => {
+      button?.classList.remove(...classes);
+    }, 300);
+  }
 
   function onImageChange(direction: "next" | "prev") {
     if (!api) {
@@ -77,6 +96,12 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
     }
 
     writeActiveImageIdToUrl(currentImage.id);
+
+    const imgElement = document.getElementById(
+      currentImage.id
+    ) as HTMLImageElement;
+
+    imgElement?.complete && imgElement.classList.remove("opacity-0");
   }
 
   function isLandscape(image: ImageWithMeta) {
@@ -85,6 +110,10 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
     }
 
     return image.attributes?.width > image.attributes?.height;
+  }
+
+  function onLoadingComplete(e) {
+    e.target.classList.remove("opacity-0");
   }
 
   return (
@@ -108,6 +137,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
             >
               <div className={"flex flex-col gap-2"}>
                 <img
+                  id={img.id}
                   src={img.src}
                   alt={img.location}
                   style={{
@@ -122,7 +152,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                       ? ""
                       : "max-w-[300px] md:max-w-[400px]"
                   }`}
-                  onLoad={(e) => e.target.classList.remove("opacity-0")}
+                  onLoad={onLoadingComplete}
                 />
                 <p className={"text-sm text-white/70"}>{img.location}</p>
               </div>

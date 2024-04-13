@@ -4,7 +4,6 @@ import Toast from "../components/Toast.astro";
 import "../styles/styles.css";
 import Footer from "../components/Footer.astro";
 import { GalleryHorizontal, LayoutGrid } from "lucide-react";
-import { ImageCarousel } from "../components/ImageCarousel";
 
 const meta = {
   title: "The Beauty of Earth",
@@ -13,7 +12,7 @@ const meta = {
 
 const { title, description } = meta;
 
-const activeItem: "grid" | "carousel" = Astro.url.href.endsWith("/grid")
+const activeItem: "grid" | "carousel" = Astro.url.pathname.includes("grid")
   ? "grid"
   : "carousel";
 ---
