@@ -13,7 +13,6 @@ export function writeActiveImageIdToUrl(id: string) {
 export function getImageIndex(images: ImageWithMeta[]): number | undefined {
   const urlParams = new URLSearchParams(window.location.search);
 
-  console.log(urlParams.get(IMAGE_URL_PARAM));
   const imageId = urlParams.get(IMAGE_URL_PARAM);
 
   if (!imageId) {

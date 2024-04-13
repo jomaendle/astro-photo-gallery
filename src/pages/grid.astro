@@ -2,17 +2,36 @@
 import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
-import { ImageCarousel } from "../components/ImageCarousel";
 
 const imageCollection = await getCollection("images");
+
+function getImageRatio(image) {
+  const { width, height } = image.data.image;
+  return width / height;
+}
+
+function getAspectRatio(image) {
+  const ratio = getImageRatio(image);
+  if (ratio > 1) {
+    return "landscape";
+  } else if (ratio < 1) {
+    return "portrait";
+  } else {
+    return "square";
+  }
+}
 ---
 
 <Layout>
-  <div class="mx-auto grid max-w-[1200px] gap-4 md:grid-cols-2 md:pb-12">
+  <div class="mx-auto grid w-full max-w-[1100px] gap-4 md:pb-12 lg:grid-cols-2">
     {
       imageCollection.map((image, index) => (
-        <div
-          class="relative w-full min-w-[300px] md:h-[400px]"
+        <jomae-photo
+          class={`relative w-full ${
+            getAspectRatio(image) === "landscape"
+              ? "col-span-2 lg:col-span-1 "
+              : "lg:row-span-2"
+          }`}
           style={{
             backgroundColor: image.data.color,
           }}
@@ -24,13 +43,41 @@ const imageCollection = await getCollection("images");
           </div>
           <Image
             src={image.data.image}
-            height={600}
-            quality={95}
+            width={800}
+            quality={90}
             alt={image.data.location}
-            class="h-full w-full object-cover"
+            class="h-full w-full object-cover opacity-0 transition-opacity duration-500"
           />
-        </div>
+        </jomae-photo>
       ))
     }
   </div>
 </Layout>
+
+<script>
+  class JomaePhoto extends HTMLElement {
+    constructor() {
+      super();
+
+      const img = this.querySelector("img");
+
+      if (img.complete) {
+        applyImageLoadedStyles(img);
+      } else {
+        img.addEventListener("load", ({ target }) =>
+          applyImageLoadedStyles(target)
+        );
+      }
+
+      function applyImageLoadedStyles(img) {
+        if (!img) {
+          return;
+        }
+
+        img.classList.remove("opacity-0");
+      }
+    }
+  }
+
+  customElements.define("jomae-photo", JomaePhoto);
+</script>
