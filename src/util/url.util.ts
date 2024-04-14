@@ -1,4 +1,4 @@
-import type { ImageWithMeta } from "../components/ImageSlides.tsx";
+import type { ImageWithMeta } from "@/components/ImageCarousel.tsx";
 
 const IMAGE_URL_PARAM = "image";
 

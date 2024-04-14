@@ -1,6 +1,6 @@
-import type { ImageWithMeta } from "@/components/ImageSlides.tsx";
 import { type CollectionEntry, getCollection } from "astro:content";
 import { getImage } from "astro:assets";
+import type { ImageWithMeta } from "@/components/ImageCarousel.tsx";
 
 export async function loadImages(
   preferredImageWidth: number,
