@@ -113,10 +113,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
   }
 
   function onLoadingComplete(e: SyntheticEvent<HTMLImageElement>) {
-    (e.target as HTMLElement).classList.remove("opacity-0");
-    (e.target as HTMLElement).parentElement
-      ?.querySelector(".location")
-      ?.classList.remove("opacity-0");
+    (e.target as HTMLElement).parentElement?.classList.remove("opacity-0");
   }
 
   return (
@@ -139,7 +136,9 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
               className="flex h-full max-h-[700px] justify-center"
             >
               <div
-                className={"flex h-full flex-col gap-2"}
+                className={
+                  "flex h-full flex-col gap-2 opacity-0 transition-opacity duration-500"
+                }
                 style={{
                   aspectRatio: isLandscape(img) ? "16/11" : "12/16",
                   maxWidth: isLandscape(img) ? "100%" : "400px",
@@ -157,14 +156,10 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                   height={img.options?.height}
                   loading={index === 0 ? "eager" : "lazy"}
                   decoding={"async"}
-                  className={`object-cover opacity-0 transition-opacity duration-500`}
+                  className={`object-cover`}
                   onLoad={onLoadingComplete}
                 />
-                <p
-                  className={
-                    "location text-center text-xs text-white/60 opacity-0 transition-opacity duration-500"
-                  }
-                >
+                <p className={"location text-center text-xs text-white/60 "}>
                   {img.location}
                 </p>
               </div>
