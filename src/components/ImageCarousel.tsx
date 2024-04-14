@@ -104,15 +104,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
     }
 
     writeActiveImageIdToUrl(currentImage.id);
-
-    const imgElement = document.getElementById(
-      currentImage.id
-    ) as HTMLImageElement;
-
-    if (imgElement) {
-      imgElement.complete &&
-        imgElement.parentElement?.classList.remove("opacity-0");
-    }
+    onLoadingComplete(currentImage.id);
   }
 
   function isLandscape(image: ImageWithMeta) {
@@ -123,8 +115,14 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
     return image.attributes?.width > image.attributes?.height;
   }
 
-  function onLoadingComplete(e: SyntheticEvent<HTMLImageElement>) {
-    (e.target as HTMLElement).parentElement?.classList.remove("opacity-0");
+  function onLoadingComplete(imageId: string) {
+    const imgElement = document.getElementById(imageId) as HTMLImageElement;
+
+    if (imgElement) {
+      imgElement.complete &&
+        imgElement.parentElement?.classList.remove("opacity-0");
+      document.getElementById("loading-" + imageId)?.classList.add("opacity-0");
+    }
   }
 
   async function shareImage(img: ImageWithMeta) {
@@ -149,9 +147,6 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
         onClick={(e) => e.stopPropagation()}
         className="relative mx-auto flex h-full w-full items-center justify-center gap-4 overflow-hidden sm:max-w-lg lg:max-w-2xl"
       >
-        <CarouselPrevious
-          className={"z-10 hidden h-10 w-10 shrink-0 sm:flex"}
-        />
         <CarouselContent className="flex h-full shrink-0 items-center">
           {(images ?? []).map((img, index) => (
             <CarouselItem
@@ -159,12 +154,13 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
               className="relative flex h-full max-h-[700px] justify-center"
             >
               <div
+                id={"loading-" + img.id}
                 className={
-                  "absolute inset-0 z-0 flex items-center justify-center"
+                  "absolute inset-0 z-0 flex items-center justify-center transition-opacity duration-500"
                 }
               >
                 <svg
-                  className={"h-8 w-8 animate-spin text-white"}
+                  className="h-8 w-8 animate-spin text-white"
                   fill="none"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
@@ -190,7 +186,6 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                   "z-10 flex h-full flex-col gap-2 opacity-0 transition-opacity duration-500"
                 }
                 style={{
-                  aspectRatio: isLandscape(img) ? "16/11" : "12/16",
                   maxWidth: isLandscape(img) ? "100%" : "400px",
                 }}
               >
@@ -207,8 +202,8 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                   height={img.options?.height}
                   loading={index === 0 ? "eager" : "lazy"}
                   decoding={"async"}
-                  className={`object-cover`}
-                  onLoad={onLoadingComplete}
+                  className={`w-full object-cover`}
+                  onLoad={() => onLoadingComplete(img.id)}
                 />
                 <div className={"flex items-center gap-4"}>
                   <p className={"location flex-1 text-xs text-white/70"}>
@@ -224,7 +219,6 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselNext className={"z-10 hidden h-10 w-10 shrink-0 sm:flex"} />
       </Carousel>
 
       <ImageButtons
