@@ -2,18 +2,18 @@ import {
   Carousel,
   type CarouselApi,
   CarouselContent,
+  CarouselDot,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import ImageButtons from "@/components/ImageButtons.tsx";
-import React, { type SyntheticEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { setBackgroundColorCssVariable } from "@/util/dom.util.ts";
 import { getImageIndex, writeActiveImageIdToUrl } from "@/util/url.util.ts";
 import { NEXT_BUTTON_ID, PREV_BUTTON_ID } from "@/util/constants.ts";
 import IconButton from "@/components/IconButton.tsx";
 import { $imageShareClick } from "@/store/image.store.ts";
 import type { GetImageResult } from "astro";
+import Autoplay from "embla-carousel-autoplay";
 
 export type ImageWithMeta = GetImageResult & {
   location: string;
@@ -24,6 +24,8 @@ export type ImageWithMeta = GetImageResult & {
 export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
   const [api, setApi] = useState<CarouselApi>();
   const [startIndex, setStartIndex] = useState(0);
+  const [isNextDisabled, setIsNextDisabled] = useState(false);
+  const [isPrevDisabled, setIsPrevDisabled] = useState(true);
 
   useEffect(() => {
     setStartIndex(getImageIndex(images) ?? 0);
@@ -44,7 +46,11 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
 
     updateBackground();
 
-    api.on("select", () => updateBackground());
+    api.on("select", () => {
+      updateBackground();
+      setIsNextDisabled(!api.canScrollNext());
+      setIsPrevDisabled(!api.canScrollPrev());
+    });
 
     window.addEventListener("keydown", (event) => {
       if (event.key === "ArrowRight") {
@@ -140,6 +146,11 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
   return (
     <div className={"flex h-full flex-col gap-2"}>
       <Carousel
+        plugins={[
+          Autoplay({
+            delay: 5000,
+          }),
+        ]}
         setApi={setApi}
         opts={{
           align: "start",
@@ -206,6 +217,9 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                   onLoad={() => onLoadingComplete(img.id)}
                 />
                 <div className={"flex items-center gap-4"}>
+                  <div className={"flex items-center justify-center"}>
+                    <CarouselDot />
+                  </div>
                   <p className={"location flex-1 text-xs text-white/70"}>
                     {img.location}
                   </p>
@@ -224,6 +238,8 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
       <ImageButtons
         onNextClick={() => onImageChange("next")}
         onPrevClick={() => onImageChange("prev")}
+        isPrevDisabled={isPrevDisabled}
+        isNextDisabled={isNextDisabled}
       />
     </div>
   );

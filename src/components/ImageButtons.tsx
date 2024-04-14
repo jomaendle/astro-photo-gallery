@@ -6,11 +6,15 @@ import Tooltip from "./Tooltip.tsx";
 export interface ImageButtonsProps {
   onPrevClick: () => void;
   onNextClick: () => void;
+  isPrevDisabled?: boolean;
+  isNextDisabled?: boolean;
 }
 
 export default function ImageButtons({
   onPrevClick,
   onNextClick,
+  isPrevDisabled,
+  isNextDisabled,
 }: ImageButtonsProps): ReactElement {
   const prevButtonRef = useRef<HTMLButtonElement | null>(null);
   const nextButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -60,6 +64,7 @@ export default function ImageButtons({
         onMouseLeave={() => handleMouseLeave("prev")}
         title={"Show previous image (or press left arrow key)"}
         aria-label={"Show previous image"}
+        disabled={isPrevDisabled}
       >
         <Icon
           icon={"carbon:previous-outline"}
@@ -75,6 +80,7 @@ export default function ImageButtons({
         onMouseLeave={() => handleMouseLeave("next")}
         title={"Show next image (or press right arrow key)"}
         aria-label={"Show next image"}
+        disabled={isNextDisabled}
       >
         <Icon
           icon={"carbon:next-outline"}
