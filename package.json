@@ -1,7 +1,9 @@
 {
   "name": "astro-photo-gallery",
+  "author": "Johannes Maendle",
+  "description": "A photo gallery of images taken by Johannes Maendle.",
   "type": "module",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
