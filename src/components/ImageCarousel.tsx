@@ -117,7 +117,8 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
       "/api/views?" + new URLSearchParams({ slug: currentImage.id })
     );
 
-    console.log(response, response.body);
+    const count = await response.json();
+    setCurrentViews(count.count);
   }
 
   function isLandscape(image: ImageWithMeta) {
@@ -225,8 +226,11 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                   <p className={"location flex-1 text-xs text-white/70"}>
                     {img.location}
                   </p>
-                  <div>
+                  <div
+                    className={"flex items-center gap-1 text-sm text-white/70"}
+                  >
                     <Eye size={16} />
+                    <div>{currentViews}</div>
                   </div>
                   <IconButton
                     click={() => shareImage(img)}
