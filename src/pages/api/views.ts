@@ -20,6 +20,8 @@ export const GET: APIRoute = async ({ request }) => {
       .from(Views)
       .where(eq(Views.slug, slug));
 
+    console.log('VIEW ITEM', views[0])
+
     item = await db
       .insert(Views)
       .values({
@@ -39,6 +41,7 @@ export const GET: APIRoute = async ({ request }) => {
       .then((res) => res[0]);
   } catch (error) {
     item = { slug, count: 1 };
+    console.error(error);
   }
 
   console.log("ITEM,", item);
