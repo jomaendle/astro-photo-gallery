@@ -1,5 +1,4 @@
 import { type ReactElement, useRef, useState } from "react";
-import { Icon } from "@iconify/react";
 import { NEXT_BUTTON_ID, PREV_BUTTON_ID } from "../util/constants.ts";
 import Tooltip from "./Tooltip.tsx";
 
@@ -66,11 +65,12 @@ export default function ImageButtons({
         aria-label={"Show previous image"}
         disabled={isPrevDisabled}
       >
-        <Icon
+       {/* <Icon
           icon={"carbon:previous-outline"}
           width={36}
           className={"icon icon-hover"}
-        ></Icon>
+        ></Icon>*/}
+        Prev
       </button>
       <button
         id={NEXT_BUTTON_ID}
@@ -82,11 +82,12 @@ export default function ImageButtons({
         aria-label={"Show next image"}
         disabled={isNextDisabled}
       >
-        <Icon
+        {/*<Icon
           icon={"carbon:next-outline"}
           width={36}
           className={"icon icon-hover"}
-        ></Icon>
+        ></Icon>*/}
+        Next
       </button>
     </div>
   );
