@@ -7,11 +7,12 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build --remote",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/db": "^0.10.4",
     "@astrojs/netlify": "^5.2.0",
     "@astrojs/react": "^3.1.1",
     "@astrojs/tailwind": "^5.1.0",
@@ -22,7 +23,6 @@
     "astro-icon": "^0.8.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
-    "embla-carousel-autoplay": "^8.0.2",
     "embla-carousel-react": "^8.0.2",
     "lucide-react": "^0.367.0",
     "nanostores": "^0.9.3",

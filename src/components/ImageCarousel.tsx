@@ -13,7 +13,7 @@ import { NEXT_BUTTON_ID, PREV_BUTTON_ID } from "@/util/constants.ts";
 import IconButton from "@/components/IconButton.tsx";
 import { $imageShareClick } from "@/store/image.store.ts";
 import type { GetImageResult } from "astro";
-import Autoplay from "embla-carousel-autoplay";
+import { Eye } from "lucide-react";
 
 export type ImageWithMeta = GetImageResult & {
   location: string;
@@ -26,6 +26,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
   const [startIndex, setStartIndex] = useState(0);
   const [isNextDisabled, setIsNextDisabled] = useState(false);
   const [isPrevDisabled, setIsPrevDisabled] = useState(true);
+  const [currentViews, setCurrentViews] = useState(0);
 
   useEffect(() => {
     setStartIndex(getImageIndex(images) ?? 0);
@@ -97,7 +98,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
     }
   }
 
-  function updateBackground() {
+  async function updateBackground() {
     if (!api) {
       return;
     }
@@ -111,6 +112,12 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
 
     writeActiveImageIdToUrl(currentImage.id);
     onLoadingComplete(currentImage.id);
+
+    const response = await fetch(
+      "/api/views?" + new URLSearchParams({ slug: currentImage.id })
+    );
+
+    console.log(response, response.body);
   }
 
   function isLandscape(image: ImageWithMeta) {
@@ -146,11 +153,6 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
   return (
     <div className={"flex h-full flex-col gap-2"}>
       <Carousel
-        plugins={[
-          Autoplay({
-            delay: 5000,
-          }),
-        ]}
         setApi={setApi}
         opts={{
           align: "start",
@@ -223,6 +225,9 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                   <p className={"location flex-1 text-xs text-white/70"}>
                     {img.location}
                   </p>
+                  <div>
+                    <Eye size={16} />
+                  </div>
                   <IconButton
                     click={() => shareImage(img)}
                     tooltip={"Share this image"}
