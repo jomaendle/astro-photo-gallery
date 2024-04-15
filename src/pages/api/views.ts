@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { db, eq, sql, Views } from "astro:db";
+import { db, eq, sql, ImageViews } from "astro:db";
 
 export const GET: APIRoute = async ({ request }) => {
   const url = new URL(request.url);
@@ -15,21 +15,21 @@ export const GET: APIRoute = async ({ request }) => {
   try {
     const views = await db
       .select({
-        count: Views.count,
+        count: ImageViews.count,
       })
-      .from(Views)
-      .where(eq(Views.slug, slug));
+      .from(ImageViews)
+      .where(eq(ImageViews.slug, slug));
 
     console.log('VIEW ITEM')
 
-    item = await db.insert(Views).values({
+    item = await db.insert(ImageViews).values({
       slug,
       count: 1
     }).returning({
-      slug: Views.slug,
-      count: Views.count,
+      slug: ImageViews.slug,
+      count: ImageViews.count,
     }).onConflictDoUpdate({
-      target: Views.slug,
+      target: ImageViews.slug,
       set: {
         count: sql`count + 1`,
       },

@@ -1,6 +1,16 @@
 import { column, defineDb, defineTable } from "astro:db";
 
 const Views = defineTable({
+  deprecated: true,
+  columns: {
+    slug: column.text({ primaryKey: true }),
+    count: column.number({
+      default: 1,
+    }),
+  },
+});
+
+const ImageViews = defineTable({
   columns: {
     slug: column.text({ primaryKey: true }),
     count: column.number({
@@ -10,5 +20,5 @@ const Views = defineTable({
 });
 
 export default defineDb({
-  tables: { Views },
+  tables: { ImageViews },
 });
