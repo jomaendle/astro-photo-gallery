@@ -45,10 +45,10 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
       return;
     }
 
-    updateBackground();
+    onImageChange();
 
     api.on("select", () => {
-      updateBackground();
+      onImageChange();
       setIsNextDisabled(!api.canScrollNext());
       setIsPrevDisabled(!api.canScrollPrev());
     });
@@ -56,12 +56,12 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
     window.addEventListener("keydown", (event) => {
       if (event.key === "ArrowRight") {
         addFocusStyles(NEXT_BUTTON_ID);
-        onImageChange("next");
+        goToImage("next");
       }
 
       if (event.key === "ArrowLeft") {
         addFocusStyles(PREV_BUTTON_ID);
-        onImageChange("prev");
+        goToImage("prev");
       }
     });
 
@@ -86,7 +86,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
     }, 300);
   }
 
-  function onImageChange(direction: "next" | "prev") {
+  function goToImage(direction: "next" | "prev") {
     if (!api) {
       return;
     }
@@ -98,7 +98,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
     }
   }
 
-  async function updateBackground() {
+  function onImageChange() {
     if (!api) {
       return;
     }
@@ -112,13 +112,24 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
 
     writeActiveImageIdToUrl(currentImage.id);
     onLoadingComplete(currentImage.id);
+    fetchImageViews(currentImage.id);
+  }
 
-    const response = await fetch(
-      "/api/views?" + new URLSearchParams({ slug: currentImage.id })
-    );
+  function fetchImageViews(imageId: string) {
+    fetch(
+      "/api/views?" + new URLSearchParams({ slug: imageId }),
+      {
+        method: 'GET',
+      }
+    ).then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
 
-    const count = await response.json();
-    setCurrentViews(count.count);
+      throw new Error("Failed to fetch views");
+    }).then((count) => {
+      setCurrentViews(count.count);
+    })
   }
 
   function isLandscape(image: ImageWithMeta) {
@@ -245,8 +256,8 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
       </Carousel>
 
       <ImageButtons
-        onNextClick={() => onImageChange("next")}
-        onPrevClick={() => onImageChange("prev")}
+        onNextClick={() => goToImage("next")}
+        onPrevClick={() => goToImage("prev")}
         isPrevDisabled={isPrevDisabled}
         isNextDisabled={isNextDisabled}
       />
