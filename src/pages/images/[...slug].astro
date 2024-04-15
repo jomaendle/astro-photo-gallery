@@ -1,0 +1,116 @@
+---
+import type { ImageWithMeta } from "../../components/ImageCarousel";
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const blogEntries = await getCollection("images");
+
+  return blogEntries.map((entry) => ({
+    params: { slug: entry.data.id },
+    props: { entry },
+  }));
+}
+
+function isLandscape(image: ImageWithMeta) {
+  if (!image.image?.width || !image.image?.height) {
+    return false;
+  }
+
+  return image.image?.width > image.image?.height;
+}
+
+const { entry } = Astro.props;
+
+const img = entry.data;
+---
+
+<Layout>
+  <app-photo>
+    <div class="col-span-2 h-full overflow-hidden md:pb-2 lg:col-start-2">
+      <div class="relative flex h-full max-h-[700px] justify-center">
+        <div
+          id={"loading-" + img.id}
+          class={"absolute inset-0 z-0 flex items-center justify-center transition-opacity duration-500"}
+        >
+          <svg
+            class="h-8 w-8 animate-spin text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="4"></circle>
+            <path
+              class="opacity-75"
+              d="M4 12a8 8 0 018-8V2.5"
+              stroke="currentColor"
+              stroke-width="4"></path>
+          </svg>
+        </div>
+        <div
+          class={"z-10 flex h-full flex-col gap-2 opacity-0 transition-opacity duration-500"}
+          style={{
+            maxWidth: isLandscape(img) ? "100%" : "400px",
+          }}
+        >
+          <Image
+            id={img.id}
+            src={img.image}
+            alt={img.location}
+            style={{
+              backgroundColor: img.color,
+              aspectRatio: isLandscape(img) ? "16/11" : "12/16",
+              maxHeight: "calc(100% - (40px))",
+            }}
+            width={img.image?.width}
+            height={img.image?.height}
+            class={`w-full object-cover`}
+          />
+          <div class={"flex items-center gap-4"}>
+            <div class={"flex items-center justify-center"}></div>
+            <p class={"location flex-1 text-xs text-white/70"}>
+              {img.location}
+            </p>
+            <!-- <IconButton
+            click={() => shareImage(img)}
+            tooltip={"Share this image"}
+            icon={"bi:share"}
+          />-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </app-photo>
+</Layout>
+
+<script>
+  class Photo extends HTMLElement {
+    image: HTMLImageElement;
+    loading: HTMLElement;
+
+    constructor() {
+      super();
+      this.loading = this.querySelector("#loading-" + this.getAttribute("id"));
+      this.image = this.querySelector("img");
+
+      this.image.complete
+        ? this.onLoad()
+        : this.image.addEventListener("load", this.onLoad.bind(this));
+    }
+
+    onLoad() {
+      console.log("loaded", this.image.parentElement);
+      this.image.parentElement.classList.remove("opacity-0");
+    }
+  }
+
+  customElements.define("app-photo", Photo);
+</script>
