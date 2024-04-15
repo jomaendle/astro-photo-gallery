@@ -1,7 +1,9 @@
 ---
+import { $viewsPerImage, setViewsPerImageInStore } from "../store/image.store";
 import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
+import { Eye } from "lucide-react";
 
 const imageCollection = await getCollection("images");
 
@@ -36,12 +38,20 @@ function getAspectRatio(image) {
             backgroundColor: image.data.color,
           }}
         >
-          <div class=" group absolute inset-0 z-10 flex h-full items-end from-black/70 to-50% transition-all hover:bg-gradient-to-t">
-            <p class="hidden p-4 text-sm text-white group-hover:block">
-              {image.data.location}
-            </p>
+          <div
+            class=" group absolute inset-0 z-10 flex h-full items-end from-black/70 to-50% transition-all hover:bg-gradient-to-t">
+            <div class="hidden p-4 text-sm text-white group-hover:flex w-full">
+              <p class="flex-1">
+                {image.data.location}
+              </p>
+              <div class="flex items-center gap-1 text-sm">
+                <Eye size={16} />
+                <span class="views-value"></span>
+              </div>
+            </div>
           </div>
           <Image
+            id={image.data.id}
             src={image.data.image}
             width={800}
             quality={90}
@@ -55,24 +65,64 @@ function getAspectRatio(image) {
 </Layout>
 
 <script>
+  import {
+    $viewsPerImage,
+    setViewsPerImageInStore,
+  } from "../store/image.store";
+
   class JomaePhoto extends HTMLElement {
     constructor() {
       super();
 
       const img = this.querySelector("img");
 
+      this.fetchImageViews(img.id);
+
       if (img.complete) {
-        applyImageLoadedStyles(img);
+        this.applyImageLoadedStyles(img);
       } else {
         img.addEventListener("load", ({ target }) =>
-          applyImageLoadedStyles(target)
+          this.applyImageLoadedStyles(target),
         );
       }
 
-      function applyImageLoadedStyles(img) {
-        img.classList.remove("opacity-0");
-      }
+      $viewsPerImage.subscribe((views) => {
+        const viewsValue = this.querySelector(".views-value");
+        viewsValue.textContent = String(views.get(img.id) || 0);
+      });
     }
+
+
+    applyImageLoadedStyles(img) {
+      img.classList.remove("opacity-0");
+    }
+
+    fetchImageViews(imageId: string) {
+      if (!imageId) {
+        return;
+      }
+
+      if ($viewsPerImage.get().has(imageId)) {
+        console.log("Views already in store");
+        return;
+      }
+
+      fetch(
+        `/api/${imageId}`,
+        {
+          method: "GET",
+        },
+      ).then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+
+        throw new Error("Failed to fetch views: " + response.statusText);
+      }).then((count) => {
+        setViewsPerImageInStore(imageId, count.count);
+      });
+    }
+
   }
 
   customElements.define("jomae-photo", JomaePhoto);

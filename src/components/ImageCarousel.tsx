@@ -10,10 +10,18 @@ import React, { useEffect, useState } from "react";
 import { setBackgroundColorCssVariable } from "@/util/dom.util.ts";
 import { getImageIndex, writeActiveImageIdToUrl } from "@/util/url.util.ts";
 import { NEXT_BUTTON_ID, PREV_BUTTON_ID } from "@/util/constants.ts";
-import IconButton from "@/components/IconButton.tsx";
-import { $imageShareClick } from "@/store/image.store.ts";
+import {
+  $imageShareClick, $viewsPerImage,
+  setViewsPerImageInStore,
+} from "@/store/image.store.ts";
 import type { GetImageResult } from "astro";
-import { Eye } from "lucide-react";
+import { Eye, Share } from "lucide-react";
+import { Button } from "@/components/ui/button.tsx";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider, TooltipTrigger,
+} from "@/components/ui/tooltip.tsx";
 
 export type ImageWithMeta = GetImageResult & {
   location: string;
@@ -120,6 +128,12 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
       return;
     }
 
+    if ($viewsPerImage.get().has(imageId)) {
+      setCurrentViews($viewsPerImage.get().get(imageId) as number);
+      console.log("Views already in store");
+      return;
+    }
+
     fetch(
       `/api/${imageId}`,
       {
@@ -133,6 +147,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
       throw new Error("Failed to fetch views: " + response.statusText);
     }).then((count) => {
       setCurrentViews(count.count);
+      setViewsPerImageInStore(imageId, count.count);
     })
   }
 
@@ -247,11 +262,20 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                     <Eye size={16} />
                     <div>{currentViews}</div>
                   </div>
-                  <IconButton
-                    click={() => shareImage(img)}
-                    tooltip={"Share this image"}
-                    icon={"bi:share"}
-                  />
+
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild >
+                        <Button variant={"icon"} size={"icon"} className={"text-white/70 rounded-full"} onClick={() => shareImage(img)}>
+                          <Share size={16} />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side={"left"}>
+                        <p>Share this image</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
                 </div>
               </div>
             </CarouselItem>
