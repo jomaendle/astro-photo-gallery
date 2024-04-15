@@ -3,7 +3,7 @@ import { column, defineDb, defineTable } from "astro:db";
 const Views = defineTable({
   columns: {
     slug: column.text({ primaryKey: true }),
-    content: column.number({
+    count: column.number({
       default: 1,
     }),
   },

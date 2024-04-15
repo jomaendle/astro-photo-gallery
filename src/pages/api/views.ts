@@ -20,33 +20,28 @@ export const GET: APIRoute = async ({ request }) => {
       .from(Views)
       .where(eq(Views.slug, slug));
 
-    console.log('VIEW ITEM', views[0])
+    console.log('VIEW ITEM')
 
-    item = await db
-      .insert(Views)
-      .values({
-        slug: slug,
-        count: views[0]?.count ? views[0].count + 1 : 1,
-      })
-      .onConflictDoUpdate({
-        target: Views.slug,
-        set: {
-          count: sql`count + 1`,
-        },
-      })
-      .returning({
-        slug: Views.slug,
-        count: Views.count,
-      })
-      .then((res) => res[0]);
+    item = await db.insert(Views).values({
+      slug,
+      count: 1
+    }).returning({
+      slug: Views.slug,
+      count: Views.count,
+    }).onConflictDoUpdate({
+      target: Views.slug,
+      set: {
+        count: sql`count + 1`,
+      },
+    }).then((res) => res[0]);
   } catch (error) {
     item = { slug, count: 1 };
-    console.error(error);
+    console.error('Hello',error);
   }
 
   console.log("ITEM,", item);
 
-  return new Response(JSON.stringify(item), {
+  return new Response(JSON.stringify(item ?? {}), {
     status: 200,
     headers: {
       "content-type": "application/json",
