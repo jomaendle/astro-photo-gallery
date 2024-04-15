@@ -1,11 +1,11 @@
 import type { APIRoute } from "astro";
 import { db, sql, ImageViews } from "astro:db";
+import { getCollection } from "astro:content";
 
-export const GET: APIRoute = async ({ request }) => {
-  const url = new URL(request.url);
-  const params = new URLSearchParams(url.search);
+const imageCollection = await getCollection("images");
 
-  const slug = params.get("slug");
+export const GET: APIRoute = async ({ request, params }) => {
+  const slug = params["slug"];
 
   if (!slug) {
     return new Response("Not found", { status: 404 });
@@ -30,7 +30,7 @@ export const GET: APIRoute = async ({ request }) => {
     console.error("Failed writing new count: ", error);
   }
 
-  return new Response(JSON.stringify(item ?? {}), {
+  return new Response(JSON.stringify(item), {
     status: 200,
     headers: {
       "content-type": "application/json",
@@ -38,3 +38,13 @@ export const GET: APIRoute = async ({ request }) => {
     },
   });
 };
+
+export function getStaticPaths() {
+  return imageCollection.map((image) => ({
+    params: {
+      slug: image.data.id,
+    },
+  }));
+}
+
+

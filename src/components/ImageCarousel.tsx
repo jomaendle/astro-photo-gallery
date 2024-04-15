@@ -116,8 +116,12 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
   }
 
   function fetchImageViews(imageId: string) {
+    if (!imageId) {
+      return;
+    }
+
     fetch(
-      "/api/views?" + new URLSearchParams({ slug: imageId }),
+      `/api/${imageId}`,
       {
         method: 'GET',
       }
@@ -126,7 +130,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
         return response.json();
       }
 
-      throw new Error("Failed to fetch views");
+      throw new Error("Failed to fetch views: " + response.statusText);
     }).then((count) => {
       setCurrentViews(count.count);
     })
