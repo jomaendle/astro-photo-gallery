@@ -10,10 +10,18 @@ import React, { useEffect, useState } from "react";
 import { setBackgroundColorCssVariable } from "@/util/dom.util.ts";
 import { getImageIndex, writeActiveImageIdToUrl } from "@/util/url.util.ts";
 import { NEXT_BUTTON_ID, PREV_BUTTON_ID } from "@/util/constants.ts";
-import IconButton from "@/components/IconButton.tsx";
-import { $imageShareClick } from "@/store/image.store.ts";
+import {
+  $imageShareClick, $viewsPerImage,
+  setViewsPerImageInStore,
+} from "@/store/image.store.ts";
 import type { GetImageResult } from "astro";
-import Autoplay from "embla-carousel-autoplay";
+import { Eye, Share } from "lucide-react";
+import { Button } from "@/components/ui/button.tsx";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider, TooltipTrigger,
+} from "@/components/ui/tooltip.tsx";
 
 export type ImageWithMeta = GetImageResult & {
   location: string;
@@ -26,6 +34,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
   const [startIndex, setStartIndex] = useState(0);
   const [isNextDisabled, setIsNextDisabled] = useState(false);
   const [isPrevDisabled, setIsPrevDisabled] = useState(true);
+  const [currentViews, setCurrentViews] = useState(0);
 
   useEffect(() => {
     setStartIndex(getImageIndex(images) ?? 0);
@@ -44,10 +53,10 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
       return;
     }
 
-    updateBackground();
+    onImageChange();
 
     api.on("select", () => {
-      updateBackground();
+      onImageChange();
       setIsNextDisabled(!api.canScrollNext());
       setIsPrevDisabled(!api.canScrollPrev());
     });
@@ -55,12 +64,12 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
     window.addEventListener("keydown", (event) => {
       if (event.key === "ArrowRight") {
         addFocusStyles(NEXT_BUTTON_ID);
-        onImageChange("next");
+        goToImage("next");
       }
 
       if (event.key === "ArrowLeft") {
         addFocusStyles(PREV_BUTTON_ID);
-        onImageChange("prev");
+        goToImage("prev");
       }
     });
 
@@ -85,7 +94,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
     }, 300);
   }
 
-  function onImageChange(direction: "next" | "prev") {
+  function goToImage(direction: "next" | "prev") {
     if (!api) {
       return;
     }
@@ -97,7 +106,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
     }
   }
 
-  function updateBackground() {
+  function onImageChange() {
     if (!api) {
       return;
     }
@@ -111,6 +120,35 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
 
     writeActiveImageIdToUrl(currentImage.id);
     onLoadingComplete(currentImage.id);
+    fetchImageViews(currentImage.id);
+  }
+
+  function fetchImageViews(imageId: string) {
+    if (!imageId) {
+      return;
+    }
+
+    if ($viewsPerImage.get().has(imageId)) {
+      setCurrentViews($viewsPerImage.get().get(imageId) as number);
+      console.log("Views already in store");
+      return;
+    }
+
+    fetch(
+      `/api/${imageId}`,
+      {
+        method: 'GET',
+      }
+    ).then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+
+      throw new Error("Failed to fetch views: " + response.statusText);
+    }).then((count) => {
+      setCurrentViews(count.count);
+      setViewsPerImageInStore(imageId, count.count);
+    })
   }
 
   function isLandscape(image: ImageWithMeta) {
@@ -146,11 +184,6 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
   return (
     <div className={"flex h-full flex-col gap-2"}>
       <Carousel
-        plugins={[
-          Autoplay({
-            delay: 5000,
-          }),
-        ]}
         setApi={setApi}
         opts={{
           align: "start",
@@ -223,11 +256,26 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                   <p className={"location flex-1 text-xs text-white/70"}>
                     {img.location}
                   </p>
-                  <IconButton
-                    click={() => shareImage(img)}
-                    tooltip={"Share this image"}
-                    icon={"bi:share"}
-                  />
+                  <div
+                    className={"flex items-center gap-1 text-sm text-white/70"}
+                  >
+                    <Eye size={16} />
+                    <div>{currentViews}</div>
+                  </div>
+
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild >
+                        <Button variant={"icon"} size={"icon"} className={"text-white/70 rounded-full"} onClick={() => shareImage(img)}>
+                          <Share size={16} />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side={"left"}>
+                        <p>Share this image</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
                 </div>
               </div>
             </CarouselItem>
@@ -236,8 +284,8 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
       </Carousel>
 
       <ImageButtons
-        onNextClick={() => onImageChange("next")}
-        onPrevClick={() => onImageChange("prev")}
+        onNextClick={() => goToImage("next")}
+        onPrevClick={() => goToImage("prev")}
         isPrevDisabled={isPrevDisabled}
         isNextDisabled={isNextDisabled}
       />
