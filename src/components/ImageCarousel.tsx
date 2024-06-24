@@ -1,27 +1,29 @@
+import ImageButtons from "@/components/ImageButtons.tsx";
+import { Button } from "@/components/ui/button.tsx";
 import {
   Carousel,
-  type CarouselApi,
   CarouselContent,
   CarouselDot,
   CarouselItem,
+  type CarouselApi,
 } from "@/components/ui/carousel";
-import ImageButtons from "@/components/ImageButtons.tsx";
-import React, { useEffect, useState } from "react";
-import { setBackgroundColorCssVariable } from "@/util/dom.util.ts";
-import { getImageIndex, writeActiveImageIdToUrl } from "@/util/url.util.ts";
-import { NEXT_BUTTON_ID, PREV_BUTTON_ID } from "@/util/constants.ts";
-import {
-  $imageShareClick, $viewsPerImage,
-  setViewsPerImageInStore,
-} from "@/store/image.store.ts";
-import type { GetImageResult } from "astro";
-import { Eye, Share } from "lucide-react";
-import { Button } from "@/components/ui/button.tsx";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider, TooltipTrigger,
+  TooltipProvider,
+  TooltipTrigger,
 } from "@/components/ui/tooltip.tsx";
+import {
+  $imageShareClick,
+  $viewsPerImage,
+  setViewsPerImageInStore,
+} from "@/store/image.store.ts";
+import { NEXT_BUTTON_ID, PREV_BUTTON_ID } from "@/util/constants.ts";
+import { setBackgroundColorCssVariable } from "@/util/dom.util.ts";
+import { getImageIndex, writeActiveImageIdToUrl } from "@/util/url.util.ts";
+import type { GetImageResult } from "astro";
+import { Eye, Share } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export type ImageWithMeta = GetImageResult & {
   location: string;
@@ -134,21 +136,20 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
       return;
     }
 
-    fetch(
-      `/api/${imageId}`,
-      {
-        method: 'GET',
-      }
-    ).then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-
-      throw new Error("Failed to fetch views: " + response.statusText);
-    }).then((count) => {
-      setCurrentViews(count.count);
-      setViewsPerImageInStore(imageId, count.count);
+    fetch(`/api/${imageId}`, {
+      method: "GET",
     })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+
+        throw new Error("Failed to fetch views: " + response.statusText);
+      })
+      .then((count) => {
+        setCurrentViews(count.count);
+        setViewsPerImageInStore(imageId, count.count);
+      });
   }
 
   function isLandscape(image: ImageWithMeta) {
@@ -246,7 +247,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                   height={img.options?.height}
                   loading={index === 0 ? "eager" : "lazy"}
                   decoding={"async"}
-                  className={`w-full object-cover`}
+                  className={`w-full rounded-[1rem] object-cover shadow-lg`}
                   onLoad={() => onLoadingComplete(img.id)}
                 />
                 <div className={"flex items-center gap-4"}>
@@ -257,16 +258,21 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                     {img.location}
                   </p>
                   <div
-                    className={"flex items-center gap-1 text-sm text-white/70"}
+                    className={"flex items-center gap-1 text-xs text-white/70"}
                   >
-                    <Eye size={16} />
+                    <Eye size={14} />
                     <div>{currentViews}</div>
                   </div>
 
                   <TooltipProvider>
                     <Tooltip>
-                      <TooltipTrigger asChild >
-                        <Button variant={"icon"} size={"icon"} className={"text-white/70 rounded-full"} onClick={() => shareImage(img)}>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant={"icon"}
+                          size={"icon"}
+                          className={"rounded-full text-white/70"}
+                          onClick={() => shareImage(img)}
+                        >
                           <Share size={16} />
                         </Button>
                       </TooltipTrigger>
@@ -275,7 +281,6 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
-
                 </div>
               </div>
             </CarouselItem>

@@ -1,11 +1,11 @@
-import * as React from "react";
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -277,26 +277,24 @@ const CarouselDot = React.forwardRef<
       className={cn(
         "text-white/70",
         "text-xs",
-        "bg-black/10",
-        "px-2",
         "py-0.5",
         "rounded-full",
         className
       )}
       {...props}
     >
-      {current} /<span className={"text-[8px]"}>{count}</span>
+      {current} / <span className={""}>{count}</span>
     </div>
   );
 });
 CarouselDot.displayName = "CarouselDot";
 
 export {
-  type CarouselApi,
   Carousel,
   CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
   CarouselDot,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
 };

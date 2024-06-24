@@ -1,6 +1,6 @@
-import { type CollectionEntry, getCollection } from "astro:content";
-import { getImage } from "astro:assets";
 import type { ImageWithMeta } from "@/components/ImageCarousel.tsx";
+import { getImage } from "astro:assets";
+import { getCollection, type CollectionEntry } from "astro:content";
 
 export async function loadImages(
   preferredImageWidth: number,
@@ -12,7 +12,7 @@ export async function loadImages(
       const imageResult = await getImage({
         src: image.data.image,
         width: preferredImageWidth,
-        quality,
+        quality: quality ?? 80,
       });
 
       return {
