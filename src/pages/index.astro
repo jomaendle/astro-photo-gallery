@@ -9,6 +9,6 @@ const images = await loadImages();
 
 <Layout>
   <div class="col-span-2 h-full overflow-hidden md:pb-2 lg:col-start-2">
-    <ImageCarousel images={images} client:load />
+    <ImageCarousel images={images} client:idle />
   </div>
 </Layout>
