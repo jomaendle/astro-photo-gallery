@@ -258,11 +258,11 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                   <div className={"flex items-center justify-center"}>
                     <CarouselDot />
                   </div>
-                  <p className={"location flex-1 text-xs text-white/70"}>
+                  <p className={"location flex-1 text-xs text-white/80"}>
                     {img.location}
                   </p>
                   <div
-                    className={"flex items-center gap-1 text-xs text-white/70"}
+                    className={"flex items-center gap-1 text-xs text-white/80"}
                   >
                     <Eye size={14} />
                     <div>{currentViews}</div>
@@ -272,9 +272,10 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button
+                          aria-label="Share this image"
                           variant={"icon"}
                           size={"icon"}
-                          className={"rounded-full text-white/70"}
+                          className={"rounded-full text-white/80"}
                           onClick={() => shareImage(img)}
                         >
                           <Share size={16} />
