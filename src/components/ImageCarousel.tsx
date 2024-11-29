@@ -40,6 +40,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
 
   useEffect(() => {
     setStartIndex(getImageIndex(images) ?? 0);
+    onLoadingComplete(getImageIndex(images)?.toString() ?? "0");
   }, []);
 
   useEffect(() => {
@@ -114,15 +115,15 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
     }
 
     const currentImage = images[api.selectedScrollSnap()];
-    setBackgroundColorCssVariable(currentImage.color);
 
     if (!currentImage.id) {
       return;
     }
 
+    setBackgroundColorCssVariable(currentImage.color);
     writeActiveImageIdToUrl(currentImage.id);
-    // onLoadingComplete(currentImage.id);
     fetchImageViews(currentImage.id);
+    onLoadingComplete(currentImage.id);
   }
 
   function fetchImageViews(imageId: string) {
@@ -163,10 +164,13 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
   function onLoadingComplete(imageId: string) {
     const imgElement = document.getElementById(imageId) as HTMLImageElement;
 
-    if (imgElement) {
-      imgElement.complete &&
-        imgElement.parentElement?.classList.remove("opacity-0");
+    if (imgElement && imgElement.complete) {
+      imgElement.parentElement?.classList.remove("opacity-0");
       document.getElementById("loading-" + imageId)?.classList.add("opacity-0");
+    } else {
+      setTimeout(() => {
+        onLoadingComplete(imageId);
+      }, 100);
     }
   }
 
@@ -228,7 +232,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
               </div>
               <div
                 className={
-                  "z-10 flex h-full flex-col gap-2 opacity-0 transition-opacity duration-500"
+                  "z-10 flex h-full w-full flex-col gap-2 opacity-0 transition-opacity duration-500"
                 }
                 style={{
                   maxWidth: isLandscape(img) ? "100%" : "400px",
@@ -246,9 +250,9 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                   width={img.options?.width}
                   height={img.options?.height}
                   loading={index === 0 ? "eager" : "lazy"}
+                  onLoad={() => onLoadingComplete(img.id)}
                   decoding={"async"}
                   className={`w-full rounded-[1rem] object-cover shadow-lg`}
-                  onLoad={() => onLoadingComplete(img.id)}
                 />
                 <div className={"flex items-center gap-4"}>
                   <div className={"flex items-center justify-center"}>
