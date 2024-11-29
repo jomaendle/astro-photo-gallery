@@ -47,7 +47,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
       return;
     }
 
-    api.scrollTo(startIndex);
+    api.scrollTo(startIndex, true);
   }, [api, startIndex]);
 
   useEffect(() => {
@@ -121,7 +121,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
     }
 
     writeActiveImageIdToUrl(currentImage.id);
-    onLoadingComplete(currentImage.id);
+    // onLoadingComplete(currentImage.id);
     fetchImageViews(currentImage.id);
   }
 
