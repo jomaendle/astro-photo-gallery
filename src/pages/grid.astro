@@ -31,7 +31,7 @@ function getAspectRatio(image: CollectionEntry<"images">) {
     {
       imageCollection.map((image) => (
         <jomae-photo
-          class={`relative w-full ${
+          class={`relative w-full overflow-hidden rounded-lg ${
             getAspectRatio(image) === "landscape"
               ? "col-span-2 md:col-span-1 "
               : "md:row-span-2"
@@ -40,8 +40,8 @@ function getAspectRatio(image: CollectionEntry<"images">) {
             backgroundColor: image.data.color,
           }}
         >
-          <div class=" group absolute inset-0 z-10 flex h-full items-end from-black/70 to-50% transition-all hover:bg-gradient-to-t">
-            <div class="hidden w-full p-4 text-sm text-white group-hover:flex">
+          <div class="absolute inset-0 z-10 flex h-full items-end bg-gradient-to-t from-black/70 to-50% opacity-0 transition-all duration-300 hover:opacity-100">
+            <div class="flex w-full p-4 text-sm text-white">
               <p class="flex-1">{image.data.location}</p>
               <div class="flex items-center gap-1 text-sm">
                 <Eye size={16} />
@@ -55,7 +55,7 @@ function getAspectRatio(image: CollectionEntry<"images">) {
             width={800}
             quality={80}
             alt={image.data.location}
-            class="h-full w-full object-cover opacity-0 transition-opacity duration-500"
+            class="h-full w-full object-cover opacity-0  transition-opacity duration-500"
           />
         </jomae-photo>
       ))

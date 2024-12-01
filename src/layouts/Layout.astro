@@ -1,13 +1,13 @@
 ---
 import { ViewTransitions } from "astro:transitions";
+import { GalleryHorizontal, LayoutGrid } from "lucide-react";
+import Footer from "../components/Footer.astro";
 import Toast from "../components/Toast.astro";
 import "../styles/styles.css";
-import Footer from "../components/Footer.astro";
-import { GalleryHorizontal, LayoutGrid } from "lucide-react";
 
 const meta = {
   title: "The Beauty of Earth",
-  description: "Photography from around the world.",
+  description: "Photography from around the world by Jo Maendle.",
 };
 
 const { title, description } = meta;
@@ -82,7 +82,7 @@ const activeItem: "grid" | "carousel" = Astro.url.pathname.includes("grid")
           class="description text-transparent-500 hidden text-center text-sm md:block"
         >
           images from around the world. <br />
-           explore the beauty of our planet.
+          explore the beauty of our planet.
         </p>
 
         <section class="flex items-center justify-center gap-4 text-white/80">

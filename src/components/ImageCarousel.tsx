@@ -252,7 +252,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                   loading={index === 0 ? "eager" : "lazy"}
                   onLoad={() => onLoadingComplete(img.id)}
                   decoding={"async"}
-                  className={`w-full rounded-[1rem] object-cover shadow-lg`}
+                  className={`w-full rounded-xl object-cover shadow-lg`}
                 />
                 <div className={"flex items-center gap-4"}>
                   <div className={"flex items-center justify-center"}>
