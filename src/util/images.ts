@@ -1,6 +1,6 @@
 import type { ImageWithMeta } from "@/components/ImageCarousel.tsx";
 import { getImage } from "astro:assets";
-import { getCollection, type CollectionEntry } from "astro:content";
+import { type CollectionEntry, getCollection } from "astro:content";
 
 export async function loadImages(): Promise<ImageWithMeta[]> {
   const imageCollection = await getCollection("images");
@@ -8,8 +8,9 @@ export async function loadImages(): Promise<ImageWithMeta[]> {
     imageCollection.map(async (image: CollectionEntry<"images">) => {
       const imageResult = await getImage({
         src: image.data.image,
-        width: 800,
-        quality: 80,
+        width: 1800,
+        quality: 89,
+        format: "webp",
       });
 
       return {
