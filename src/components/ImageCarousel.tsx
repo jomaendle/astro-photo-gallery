@@ -194,7 +194,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
           align: "start",
         }}
         onClick={(e) => e.stopPropagation()}
-        className="relative mx-auto flex h-full w-full items-center justify-center gap-4 overflow-hidden sm:max-w-lg lg:max-w-2xl"
+        className="relative mx-auto flex h-full w-full items-center justify-center gap-4 overflow-hidden sm:max-w-lg lg:max-w-2xl xl:max-w-4xl"
       >
         <CarouselContent className="flex h-full shrink-0 items-center">
           {(images ?? []).map((img, index) => (
@@ -235,7 +235,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                   "z-10 flex h-full w-full flex-col gap-2 opacity-0 transition-opacity duration-500"
                 }
                 style={{
-                  maxWidth: isLandscape(img) ? "100%" : "400px",
+                  maxWidth: isLandscape(img) ? "100%" : "max(28vw, 400px)",
                 }}
               >
                 <img
@@ -252,7 +252,7 @@ export function ImageCarousel({ images }: { images: ImageWithMeta[] }) {
                   loading={index === 0 ? "eager" : "lazy"}
                   onLoad={() => onLoadingComplete(img.id)}
                   decoding={"async"}
-                  className={`w-full rounded-md object-cover shadow-lg`}
+                  className={`w-full flex-1 rounded-md object-cover shadow-lg`}
                 />
                 <div className={"flex items-center gap-4"}>
                   <div className={"flex items-center justify-center"}>
