@@ -31,10 +31,8 @@ function getAspectRatio(image: CollectionEntry<"images">) {
     {
       imageCollection.map((image) => (
         <jomae-photo
-          class={`relative w-full overflow-hidden rounded-lg ${
-            getAspectRatio(image) === "landscape"
-              ? "col-span-2 md:col-span-1 "
-              : "md:row-span-2"
+          class={`relative col-span-2 w-full overflow-hidden rounded-sm md:col-span-1 ${
+            getAspectRatio(image) === "landscape" ? "" : "md:row-span-2"
           }`}
           style={{
             backgroundColor: image.data.color,
