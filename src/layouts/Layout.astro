@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import { GalleryHorizontal, LayoutGrid } from "lucide-react";
 import Footer from "../components/Footer.astro";
 import Toast from "../components/Toast.astro";
@@ -34,6 +34,7 @@ const activeItem: "grid" | "carousel" = Astro.url.pathname.includes("grid")
       src="https://plausible.io/js/script.js"></script>
 
     <style>
+      @reference "../styles/styles.css";
       html {
         font-family: system-ui, sans-serif;
         height: 100%;
@@ -69,7 +70,7 @@ const activeItem: "grid" | "carousel" = Astro.url.pathname.includes("grid")
     <meta property="twitter:url" content={Astro.url} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
-    <ViewTransitions />
+    <ClientRouter />
   </head>
   <body class="flex flex-col">
     <main
@@ -115,6 +116,7 @@ const activeItem: "grid" | "carousel" = Astro.url.pathname.includes("grid")
     <Toast />
 
     <style is:global>
+      @reference "../styles/styles.css";
       .icon {
         @apply text-gray-200;
       }

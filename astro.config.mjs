@@ -1,9 +1,7 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
 import netlify from "@astrojs/netlify";
-import tailwind from "@astrojs/tailwind";
 import react from "@astrojs/react";
-
-import db from "@astrojs/db";
+import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
@@ -11,7 +9,8 @@ export default defineConfig({
   site: "https://photo.jomaendle.de/",
   prefetch: true,
   output: "server",
-  integrations: [tailwind({
-    nesting: true
-  }), react(), db()]
+  integrations: [react()],
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });

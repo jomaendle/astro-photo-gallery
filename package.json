@@ -7,21 +7,21 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build --remote",
+    "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.4",
-    "@astrojs/db": "^0.14.5",
-    "@astrojs/netlify": "^6.1.0",
-    "@astrojs/react": "^4.1.5",
-    "@astrojs/tailwind": "^5.1.4",
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/netlify": "^8.2.9",
+    "@astrojs/react": "^7.0.1",
+    "@libsql/client": "^0.18.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tooltip": "^1.0.7",
+    "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",
-    "astro": "^5.1.7",
+    "astro": "^7.3.8",
     "astro-icon": "^0.8.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
@@ -31,7 +31,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^2.2.2",
-    "tailwindcss": "^3.3.3",
+    "tailwindcss": "^4.3.3",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.4.5"
   },
@@ -40,5 +40,8 @@
     "prettier": "^3.2.5",
     "prettier-plugin-astro": "^0.12.0",
     "prettier-plugin-tailwindcss": "^0.5.13"
+  },
+  "engines": {
+    "node": ">=22.12.0"
   }
 }

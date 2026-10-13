@@ -1,30 +1,19 @@
 import type { APIRoute } from "astro";
-import { db, sql, ImageViews } from "astro:db";
+import { incrementImageViews } from "../../lib/db";
 import { getCollection } from "astro:content";
 
 const imageCollection = await getCollection("images");
 
-export const GET: APIRoute = async ({ request, params }) => {
+export const GET: APIRoute = async ({ params }) => {
   const slug = params["slug"];
 
   if (!slug) {
     return new Response("Not found", { status: 404 });
   }
 
-  let item;
+  let item: { slug: string; count: number };
   try {
-    item = await db.insert(ImageViews).values({
-      slug,
-      count: 1,
-    }).returning({
-      slug: ImageViews.slug,
-      count: ImageViews.count,
-    }).onConflictDoUpdate({
-      target: ImageViews.slug,
-      set: {
-        count: sql`count + 1`,
-      },
-    }).then((res) => res[0]);
+    item = await incrementImageViews(slug);
   } catch (error) {
     item = { slug, count: 1 };
     console.error("Failed writing new count: ", error);
