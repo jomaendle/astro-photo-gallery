@@ -99,7 +99,7 @@ function getAspectRatio(image: CollectionEntry<"images">) {
       });
     }
 
-    applyImageLoadedStyles(img) {
+    applyImageLoadedStyles(img: HTMLImageElement) {
       img.classList.remove("opacity-0");
     }
 
