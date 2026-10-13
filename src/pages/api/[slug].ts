@@ -7,7 +7,7 @@ const imageCollection = await getCollection("images");
 export const GET: APIRoute = async ({ params }) => {
   const slug = params["slug"];
 
-  if (!slug) {
+  if (!slug || !imageCollection.some((image) => image.data.id === slug)) {
     return new Response("Not found", { status: 404 });
   }
 

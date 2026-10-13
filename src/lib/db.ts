@@ -8,14 +8,15 @@ function getClient(): Client {
     return client;
   }
 
-  const url = import.meta.env.TURSO_DATABASE_URL;
+  // Read at runtime: import.meta.env values are inlined at build time.
+  const url = process.env.TURSO_DATABASE_URL;
   if (!url) {
     throw new Error("TURSO_DATABASE_URL must be set to count image views");
   }
 
   client = createClient({
     url,
-    authToken: import.meta.env.TURSO_AUTH_TOKEN,
+    authToken: process.env.TURSO_AUTH_TOKEN,
   });
   return client;
 }
@@ -25,9 +26,15 @@ export async function incrementImageViews(
   slug: string,
 ): Promise<{ slug: string; count: number }> {
   const db = getClient();
-  ready ??= db.execute(
-    "CREATE TABLE IF NOT EXISTS ImageViews (slug TEXT PRIMARY KEY, count INTEGER NOT NULL DEFAULT 1)",
-  );
+  ready ??= db
+    .execute(
+      "CREATE TABLE IF NOT EXISTS ImageViews (slug TEXT PRIMARY KEY, count INTEGER NOT NULL DEFAULT 1)",
+    )
+    .catch((error) => {
+      // Do not cache a failed attempt, so the next request can retry.
+      ready = undefined;
+      throw error;
+    });
   await ready;
 
   const result = await db.execute({
