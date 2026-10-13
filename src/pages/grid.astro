@@ -83,9 +83,7 @@ function getAspectRatio(image: CollectionEntry<"images">) {
       if (img.complete) {
         this.applyImageLoadedStyles(img);
       } else {
-        img.addEventListener("load", ({ target }) =>
-          this.applyImageLoadedStyles(target)
-        );
+        img.addEventListener("load", () => this.applyImageLoadedStyles(img));
       }
 
       $viewsPerImage.subscribe((views) => {
