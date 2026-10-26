@@ -1,0 +1,26 @@
+# Temporary: dumps the ImageViews counts from Astro Studio so they can be
+# moved to Turso. Delete this branch once the counts are copied.
+name: Export view counts
+
+on:
+  push:
+    branches:
+      - tmp/export-view-counts
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    env:
+      ASTRO_STUDIO_APP_TOKEN: ${{ secrets.ASTRO_STUDIO_APP_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - name: Query ImageViews
+        run: npx astro db shell --remote --query "SELECT slug, count FROM ImageViews ORDER BY slug"
